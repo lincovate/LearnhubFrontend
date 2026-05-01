@@ -16,6 +16,7 @@ const Assignments = () => {
     const [message, setMessage] = useState(null);
     const [previewFile, setPreviewFile] = useState(null);
     const [previewType, setPreviewType] = useState(null);
+    const [downloadingId, setDownloadingId] = useState(null); // Track which assignment is downloading
     const [formData, setFormData] = useState({
         title: '',
         description: '',
@@ -62,6 +63,30 @@ const Assignments = () => {
             case 'pdf': return '#f44336';
             case 'word': return '#2196f3';
             default: return '#9e9e9e';
+        }
+    };
+
+    const handleDownload = async (attachmentUrl, assignmentId, filename) => {
+        if (!attachmentUrl) return;
+        
+        setDownloadingId(assignmentId);
+        try {
+            if (!filename) {
+                const urlParts = attachmentUrl.split('/');
+                filename = urlParts[urlParts.length - 1];
+                filename = filename.split('?')[0];
+            }
+            
+            const success = await api.triggerDownload(attachmentUrl, filename);
+            
+            if (!success) {
+                alert('Download failed. Please try again.');
+            }
+        } catch (error) {
+            console.error('Download error:', error);
+            alert('Error downloading file. Please check your connection.');
+        } finally {
+            setDownloadingId(null);
         }
     };
 
@@ -388,7 +413,14 @@ const Assignments = () => {
                                             <div className="assignment-file-info">
                                                 <span className="assignment-file-name">{assignment.attachment.split('/').pop()}</span>
                                                 <div className="assignment-file-actions">
-                                                    <a href={fileUrl} target="_blank" rel="noopener noreferrer" className="assignment-download-link">📎 Download</a>
+                                                    <button 
+                                                        onClick={() => handleDownload(assignment.attachment, assignment.id)}
+                                                        className="assignment-download-link"
+                                                        disabled={downloadingId === assignment.id}
+                                                        style={{ background: 'none', border: 'none', cursor: downloadingId === assignment.id ? 'not-allowed' : 'pointer' }}
+                                                    >
+                                                        📎 {downloadingId === assignment.id ? 'Downloading...' : 'Download'}
+                                                    </button>
                                                     {fileType === 'image' && <button className="assignment-preview-link" onClick={() => handlePreview(fileUrl, 'image')}>👁️ Preview</button>}
                                                     {fileType === 'pdf' && <button className="assignment-preview-link" onClick={() => handlePreview(fileUrl, 'pdf')}>📄 Preview</button>}
                                                 </div>

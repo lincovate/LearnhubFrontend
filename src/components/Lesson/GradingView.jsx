@@ -24,6 +24,7 @@ const GradingView = () => {
     const [previewFile, setPreviewFile] = useState(null);
     const [previewType, setPreviewType] = useState(null);
     const [activeTab, setActiveTab] = useState('current');
+    const [downloadingId, setDownloadingId] = useState(null); // Track which submission is downloading
 
     // Helper function to get week number from date
     const getWeekNumber = (date) => {
@@ -69,6 +70,30 @@ const GradingView = () => {
             case 'image': return '#9c27b0';
             case 'pdf': return '#f44336';
             default: return '#9e9e9e';
+        }
+    };
+
+    const handleDownload = async (attachmentUrl, submissionId, filename) => {
+        if (!attachmentUrl) return;
+        
+        setDownloadingId(submissionId);
+        try {
+            if (!filename) {
+                const urlParts = attachmentUrl.split('/');
+                filename = urlParts[urlParts.length - 1];
+                filename = filename.split('?')[0];
+            }
+            
+            const success = await api.triggerDownload(attachmentUrl, filename);
+            
+            if (!success) {
+                alert('Download failed. Please try again.');
+            }
+        } catch (error) {
+            console.error('Download error:', error);
+            alert('Error downloading file. Please check your connection.');
+        } finally {
+            setDownloadingId(null);
         }
     };
 
@@ -257,15 +282,6 @@ const GradingView = () => {
         return 'submitted';
     };
 
-    // Generate week options based on submissions
-    const getAvailableWeeks = () => {
-        const weeks = new Set();
-        allSubmissions.forEach(sub => {
-            weeks.add(getWeekNumber(sub.submitted_at));
-        });
-        return Array.from(weeks).sort((a, b) => b - a);
-    };
-
     if (loading) {
         return (
             <div className="grading-view-loading-container">
@@ -353,18 +369,9 @@ const GradingView = () => {
                             <label>Filter by Week:</label>
                             <select value={weekFilter} onChange={(e) => setWeekFilter(e.target.value)}>
                                 <option value="">All Weeks</option>
-                                <option value="18">Week 1</option>
-                                <option value="19">Week 2</option>
-                                <option value="20">Week 3</option>
-                                <option value="21">Week 4</option>
-                                <option value="22">Week 5</option>
-                                <option value="23">Week 6</option>
-                                <option value="24">Week 7</option>
-                                <option value="25">Week 8</option>
-                                <option value="26">Week 9</option>
-                                <option value="27">Week 10</option>
-                                <option value="28">Week 11</option>
-                                <option value="29">Week 12</option>
+                                {[...Array(12)].map((_, i) => (
+                                    <option key={i + 1} value={i + 18}>Week {i + 1}</option>
+                                ))}
                             </select>
                         </div>
 
@@ -457,7 +464,14 @@ const GradingView = () => {
                             <div className="grading-view-file-info">
                                 <span className="grading-view-file-name">{sub.submission_file.split('/').pop()}</span>
                                 <div className="grading-view-file-actions">
-                                    <a href={sub.submission_file} target="_blank" rel="noopener noreferrer" className="grading-view-download-link">📎 Download</a>
+                                    <button 
+                                        onClick={() => handleDownload(sub.submission_file, sub.id)}
+                                        className="grading-view-download-link"
+                                        disabled={downloadingId === sub.id}
+                                        style={{ background: 'none', border: 'none', cursor: downloadingId === sub.id ? 'not-allowed' : 'pointer' }}
+                                    >
+                                        📎 {downloadingId === sub.id ? 'Downloading...' : 'Download'}
+                                    </button>
                                     {fileType === 'image' && (
                                         <button className="grading-view-preview-link" onClick={() => { setPreviewFile(sub.submission_file); setPreviewType('image'); }}>👁️ Preview</button>
                                     )}
