@@ -13,7 +13,7 @@ const Announcements = () => {
     const [showForm, setShowForm] = useState(false);
     const [editingAnnouncement, setEditingAnnouncement] = useState(null);
     const [currentCarouselIndex, setCurrentCarouselIndex] = useState(0);
-    const [downloading, setDownloading] = useState(false);
+    const [downloadingId, setDownloadingId] = useState(null); // Track which announcement is downloading
     const [formData, setFormData] = useState({
         title: '',
         content: '',
@@ -67,10 +67,10 @@ const Announcements = () => {
         }
     };
     
-    const handleDownload = async (attachmentUrl, filename) => {
+    const handleDownload = async (attachmentUrl, announcementId, filename) => {
         if (!attachmentUrl) return;
         
-        setDownloading(true);
+        setDownloadingId(announcementId);
         try {
             // Extract filename from URL if not provided
             if (!filename) {
@@ -79,6 +79,8 @@ const Announcements = () => {
                 // Remove query parameters if any
                 filename = filename.split('?')[0];
             }
+            
+            console.log(`Downloading attachment for announcement ${announcementId}:`, attachmentUrl);
             
             // Use the authenticated download method
             const success = await api.triggerDownload(attachmentUrl, filename);
@@ -90,7 +92,7 @@ const Announcements = () => {
             console.error('Download error:', error);
             alert('Error downloading file. Please check your connection.');
         } finally {
-            setDownloading(false);
+            setDownloadingId(null);
         }
     };
     
@@ -361,11 +363,11 @@ const Announcements = () => {
                                 </div>
                                 {currentImportant.attachment && (
                                     <button 
-                                        onClick={() => handleDownload(currentImportant.attachment)}
+                                        onClick={() => handleDownload(currentImportant.attachment, `important_${currentImportant.id}`)}
                                         className="announcement-carousel-attachment"
-                                        disabled={downloading}
+                                        disabled={downloadingId === `important_${currentImportant.id}`}
                                     >
-                                        📎 {downloading ? 'Downloading...' : 'Download Attachment'}
+                                        📎 {downloadingId === `important_${currentImportant.id}` ? 'Downloading...' : 'Download Attachment'}
                                     </button>
                                 )}
                                 <div className="announcement-carousel-footer">
@@ -456,11 +458,11 @@ const Announcements = () => {
                                     <p>{announcement.content}</p>
                                     {announcement.attachment && (
                                         <button 
-                                            onClick={() => handleDownload(announcement.attachment)}
+                                            onClick={() => handleDownload(announcement.attachment, announcement.id)}
                                             className="announcement-card-attachment"
-                                            disabled={downloading}
+                                            disabled={downloadingId === announcement.id}
                                         >
-                                            📎 {downloading ? 'Downloading...' : 'Download Attachment'}
+                                            📎 {downloadingId === announcement.id ? 'Downloading...' : 'Download Attachment'}
                                         </button>
                                     )}
                                 </div>
