@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../../api/client';
 import { useAuth } from '../../contexts/AuthContext';
-import './Attendance.css';
+import './attendance.css';
 
 const Attendance = () => {
     const { user, isTeacher } = useAuth();
