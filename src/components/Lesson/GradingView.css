@@ -1,0 +1,704 @@
+/* GradingView.css */
+:root {
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.1);
+    --primary-color: #667eea;
+    --primary-dark: #5a67d8;
+    --gray-100: #f7fafc;
+    --gray-200: #edf2f7;
+    --gray-300: #e2e8f0;
+    --gray-600: #718096;
+    --gray-700: #4a5568;
+    --gray-800: #2d3748;
+    --gray-900: #1a202c;
+    --white: #ffffff;
+    --success-color: #48bb78;
+    --warning-color: #ed8936;
+    --error-color: #f56565;
+}
+
+.grading-view-container {
+    padding: var(--spacing-xl);
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.grading-view-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-xl);
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.grading-view-back-btn {
+    background: var(--gray-200);
+    border: none;
+    padding: 10px 20px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.grading-view-back-btn:hover {
+    background: var(--gray-300);
+    transform: translateX(-2px);
+}
+
+.grading-view-header-center {
+    text-align: center;
+    flex: 1;
+}
+
+.grading-view-header h2 {
+    margin: 0;
+    color: var(--gray-900);
+    font-size: clamp(1.5rem, 4vw, 2rem);
+}
+
+.grading-view-assignment-info {
+    color: var(--gray-600);
+    margin-top: var(--spacing-xs);
+    font-size: 14px;
+}
+
+.grading-view-header-right {
+    width: 80px;
+}
+
+/* Tabs */
+.grading-view-tabs {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-xl);
+    border-bottom: 2px solid var(--gray-200);
+    padding-bottom: var(--spacing-sm);
+}
+
+.grading-view-tab-btn {
+    background: none;
+    border: none;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--gray-600);
+    transition: all 0.2s;
+    border-radius: var(--radius-md);
+}
+
+.grading-view-tab-btn:hover {
+    color: var(--primary-color);
+    background: var(--gray-100);
+}
+
+.grading-view-tab-btn.active {
+    color: var(--primary-color);
+    background: rgba(102, 126, 234, 0.1);
+    position: relative;
+}
+
+.grading-view-tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--primary-color);
+}
+
+/* Message Banner */
+.grading-view-message-banner {
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-lg);
+    animation: gradingViewSlideDown 0.3s ease;
+}
+
+.grading-view-message-success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.grading-view-message-error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Stats */
+.grading-view-submissions-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.grading-view-stat-card {
+    background: var(--white);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+}
+
+.grading-view-stat-value {
+    font-size: clamp(28px, 5vw, 40px);
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.grading-view-stat-label {
+    color: var(--gray-600);
+    margin-top: var(--spacing-xs);
+    font-size: 14px;
+}
+
+/* Filters */
+.grading-view-filters-section {
+    display: flex;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+    flex-wrap: wrap;
+    background: var(--gray-100);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+}
+
+.grading-view-filter-group {
+    flex: 1;
+    min-width: 200px;
+}
+
+.grading-view-filter-group label {
+    display: block;
+    margin-bottom: var(--spacing-sm);
+    font-weight: 500;
+    color: var(--gray-700);
+    font-size: 14px;
+}
+
+.grading-view-filter-group select {
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    background: white;
+}
+
+.grading-view-filter-group select:disabled {
+    background: var(--gray-200);
+    cursor: not-allowed;
+}
+
+/* Submissions Grid */
+.grading-view-submissions-grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.grading-view-submission-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    border-left: 4px solid var(--gray-400);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.grading-view-submission-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.grading-view-submission-graded {
+    border-left-color: var(--success-color);
+}
+
+.grading-view-submission-pending {
+    border-left-color: var(--warning-color);
+}
+
+.grading-view-submission-late {
+    border-left-color: var(--error-color);
+}
+
+.grading-view-submission-submitted {
+    border-left-color: var(--warning-color);
+}
+
+.grading-view-submission-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-lg);
+    background: var(--gray-100);
+    border-bottom: 1px solid var(--gray-200);
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.grading-view-student-info {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.grading-view-student-avatar {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.grading-view-student-details h4 {
+    margin: 0;
+    color: var(--gray-900);
+    font-size: 16px;
+}
+
+.grading-view-student-details span {
+    font-size: 13px;
+    color: var(--gray-600);
+}
+
+.grading-view-submission-status {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.grading-view-assignment-badge {
+    background: var(--primary-color);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.grading-view-late-badge {
+    background: var(--error-color);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.grading-view-on-time-badge {
+    background: var(--success-color);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.grading-view-submission-body {
+    padding: var(--spacing-lg);
+}
+
+.grading-view-course-info {
+    margin-bottom: var(--spacing-md);
+}
+
+.grading-view-course-badge {
+    background: var(--gray-200);
+    color: var(--gray-700);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.grading-view-submission-meta {
+    display: flex;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    flex-wrap: wrap;
+}
+
+.grading-view-meta-item {
+    font-size: 14px;
+    color: var(--gray-700);
+}
+
+.grading-view-submission-file-section {
+    background: var(--gray-100);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.grading-view-file-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.grading-view-file-info {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.grading-view-file-name {
+    font-size: 13px;
+    color: var(--gray-700);
+    word-break: break-all;
+}
+
+.grading-view-file-actions {
+    display: flex;
+    gap: var(--spacing-md);
+}
+
+.grading-view-download-link,
+.grading-view-preview-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 13px;
+    cursor: pointer;
+    background: none;
+    border: none;
+}
+
+.grading-view-download-link:hover,
+.grading-view-preview-link:hover {
+    text-decoration: underline;
+}
+
+.grading-view-grading-section {
+    border-top: 1px solid var(--gray-200);
+    padding-top: var(--spacing-lg);
+}
+
+.grading-view-grade-input-group,
+.grading-view-feedback-input-group {
+    margin-bottom: var(--spacing-md);
+}
+
+.grading-view-grade-input-group label,
+.grading-view-feedback-input-group label {
+    display: block;
+    margin-bottom: var(--spacing-sm);
+    font-weight: 500;
+    color: var(--gray-700);
+    font-size: 14px;
+}
+
+.grading-view-grade-input {
+    width: 200px;
+    padding: 10px 12px;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+}
+
+@media (max-width: 768px) {
+    .grading-view-grade-input {
+        width: 100%;
+    }
+}
+
+.grading-view-grade-input.grading-view-has-grade {
+    border-color: var(--success-color);
+    background: #f0fff0;
+}
+
+.grading-view-grade-preview {
+    margin-left: var(--spacing-sm);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.grading-view-feedback-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    resize: vertical;
+}
+
+.grading-view-grade-submit-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.grading-view-grade-submit-btn.grading-view-update {
+    background: var(--warning-color);
+}
+
+.grading-view-grade-submit-btn:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.05);
+}
+
+.grading-view-no-submissions {
+    text-align: center;
+    padding: 60px 20px;
+    background: var(--gray-100);
+    border-radius: var(--radius-lg);
+    color: var(--gray-600);
+}
+
+/* Preview Modal */
+.grading-view-preview-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.grading-view-preview-modal-content {
+    background: white;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 900px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.grading-view-preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.grading-view-close-preview {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.grading-view-preview-body {
+    flex: 1;
+    overflow: auto;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+}
+
+.grading-view-preview-image {
+    max-width: 100%;
+    max-height: 70vh;
+    object-fit: contain;
+}
+
+.grading-view-preview-pdf {
+    width: 100%;
+    height: 70vh;
+    border: none;
+}
+
+/* Loading */
+.grading-view-loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+}
+
+.grading-view-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid var(--gray-300);
+    border-top-color: var(--primary-color);
+    border-radius: 50%;
+    animation: gradingViewSpin 1s linear infinite;
+}
+
+@keyframes gradingViewSpin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes gradingViewSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Additional styles for date and week filters */
+
+.grading-view-date-input {
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    background: white;
+}
+
+.grading-view-date-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.grading-view-filter-actions {
+    display: flex;
+    align-items: flex-end;
+}
+
+.grading-view-clear-filters-btn {
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--gray-200);
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--gray-700);
+    transition: all 0.2s ease;
+}
+
+.grading-view-clear-filters-btn:hover {
+    background: var(--gray-300);
+    transform: translateY(-1px);
+}
+
+.grading-view-date-badge {
+    background: #ff9800;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-right: var(--spacing-sm);
+}
+
+/* Week badge in submission header */
+.grading-view-submission-status {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+        .grading-view-filter-actions {
+        align-items: stretch;
+    }
+    
+    .grading-view-clear-filters-btn {
+        margin-top: var(--spacing-sm);
+    }
+    
+    .grading-view-date-badge {
+        font-size: 10px;
+        padding: 2px 8px;
+    }
+
+    .grading-view-container {
+        padding: var(--spacing-md);
+    }
+    
+    .grading-view-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .grading-view-back-btn {
+        align-self: flex-start;
+    }
+    
+    .grading-view-submissions-stats {
+        gap: var(--spacing-md);
+    }
+    
+    .grading-view-submission-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .grading-view-submission-status {
+        align-self: flex-end;
+    }
+    
+    .grading-view-file-info {
+        width: 100%;
+    }
+    
+    .grading-view-file-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    
+    .grading-view-tabs {
+        gap: var(--spacing-sm);
+    }
+    
+    .grading-view-tab-btn {
+        padding: var(--spacing-xs) var(--spacing-md);
+        font-size: 14px;
+    }
+    
+    .grading-view-filters-section {
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+    
+    .grading-view-filter-group {
+        width: 100%;
+    }
+}
+

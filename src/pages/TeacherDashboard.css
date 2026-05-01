@@ -1,0 +1,346 @@
+/* TeacherDashboard.css */
+.teacher-dashboard {
+    display: flex;
+    min-height: 100vh;
+    background: var(--gray-100);
+    position: relative;
+}
+
+/* ==================== SIDEBAR STYLES ==================== */
+.teacher-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 280px;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: white;
+    z-index: 1000;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Custom scrollbar */
+.teacher-sidebar::-webkit-scrollbar {
+    width: 5px;
+}
+
+.teacher-sidebar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.teacher-sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+}
+
+.teacher-sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.teacher-sidebar.closed {
+    transform: translateX(-280px);
+}
+
+.teacher-sidebar.open {
+    transform: translateX(0);
+}
+
+/* Sidebar Header */
+.teacher-sidebar-header {
+    padding: 24px 20px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 20px;
+}
+
+.teacher-sidebar-logo {
+    font-size: 24px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.teacher-sidebar-logo span:first-child {
+    font-size: 28px;
+}
+
+.teacher-sidebar-logo span:last-child {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.teacher-sidebar-subtitle {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 8px;
+}
+
+/* Sidebar Navigation */
+.teacher-sidebar-nav {
+    padding: 0 15px;
+}
+
+.teacher-sidebar-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    margin: 5px 0;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.teacher-sidebar-nav-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    transform: translateX(5px);
+}
+
+.teacher-sidebar-nav-item.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.teacher-nav-icon {
+    font-size: 20px;
+    width: 28px;
+    text-align: center;
+}
+
+.teacher-nav-text {
+    flex: 1;
+}
+
+/* ==================== FLOATING TOGGLE BUTTON ==================== */
+.teacher-floating-toggle {
+    position: fixed;
+    left: 20px;
+    top: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    cursor: pointer;
+    z-index: 1100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.teacher-floating-toggle:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.teacher-floating-toggle.open {
+    left: 300px;
+    background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+}
+
+.teacher-floating-toggle.closed {
+    left: 20px;
+    background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+}
+
+/* Rotating Arrow Animation */
+.teacher-toggle-arrow {
+    display: inline-block;
+    transition: transform 0.3s ease;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.teacher-floating-toggle.open .teacher-toggle-arrow {
+    transform: rotate(180deg);
+}
+
+.teacher-floating-toggle.closed .teacher-toggle-arrow {
+    transform: rotate(0deg);
+}
+
+/* ==================== MAIN CONTENT AREA ==================== */
+.teacher-main-content {
+    flex: 1;
+    min-height: 100vh;
+    transition: margin-left 0.3s ease;
+    width: 100%;
+}
+
+.teacher-dashboard-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: var(--white);
+    padding: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+}
+
+.teacher-dashboard-header h1 {
+    margin-bottom: var(--spacing-sm);
+    font-size: clamp(1.5rem, 4vw, 2rem);
+}
+
+.teacher-dashboard-header p {
+    opacity: 0.9;
+}
+
+.teacher-tab-content {
+    padding: 0 var(--spacing-xl) var(--spacing-xl);
+}
+
+/* ==================== DESKTOP STYLES (1024px and above) ==================== */
+@media (min-width: 1024px) {
+    .teacher-sidebar {
+        transform: translateX(0) !important;
+    }
+    
+    .teacher-floating-toggle {
+        display: none;
+    }
+    
+    .teacher-main-content {
+        margin-left: 280px;
+        width: calc(100% - 280px);
+    }
+}
+
+/* ==================== TABLET STYLES (769px to 1023px) ==================== */
+@media (min-width: 769px) and (max-width: 1023px) {
+    .teacher-sidebar {
+        width: 260px;
+    }
+    
+    .teacher-sidebar.closed {
+        transform: translateX(-260px);
+    }
+    
+    .teacher-sidebar.open {
+        transform: translateX(0);
+    }
+    
+    .teacher-floating-toggle {
+        display: flex;
+    }
+    
+    .teacher-main-content {
+        width: 100%;
+    }
+    
+    .teacher-main-content.sidebar-open {
+        margin-left: 260px;
+        width: calc(100% - 260px);
+    }
+    
+    .teacher-main-content.sidebar-closed {
+        margin-left: 0;
+        width: 100%;
+    }
+}
+
+/* ==================== MOBILE STYLES (768px and below) ==================== */
+@media (max-width: 768px) {
+    .teacher-floating-toggle {
+        display: flex;
+    }
+    
+    .teacher-sidebar {
+        width: 280px;
+        z-index: 1200;
+    }
+    
+    .teacher-sidebar.closed {
+        transform: translateX(-280px);
+    }
+    
+    .teacher-sidebar.open {
+        transform: translateX(0);
+        box-shadow: 2px 0 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .teacher-main-content {
+        width: 100%;
+    }
+    
+    .teacher-main-content.sidebar-open {
+        margin-left: 0;
+        opacity: 0.95;
+    }
+    
+    .teacher-main-content.sidebar-closed {
+        margin-left: 0;
+    }
+    
+    /* Overlay when sidebar is open on mobile */
+    .teacher-sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1199;
+        animation: teacherFadeIn 0.3s ease;
+    }
+    
+    @keyframes teacherFadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    .teacher-dashboard-header {
+        padding: var(--spacing-lg);
+    }
+    
+    .teacher-tab-content {
+        padding: 0 var(--spacing-md) var(--spacing-md);
+    }
+    
+    .teacher-dashboard-header h1 {
+        font-size: 24px;
+    }
+}
+
+/* ==================== EXTRA SMALL DEVICES (480px and below) ==================== */
+@media (max-width: 480px) {
+    .teacher-dashboard-header {
+        padding: var(--spacing-md);
+    }
+    
+    .teacher-dashboard-header h1 {
+        font-size: 20px;
+    }
+    
+    .teacher-dashboard-header p {
+        font-size: 14px;
+    }
+    
+    .teacher-tab-content {
+        padding: 0 var(--spacing-sm) var(--spacing-sm);
+    }
+}
+
+/* ==================== UTILITY CLASSES ==================== */
+/* Hide scrollbar for cleaner look on modern browsers */
+.teacher-sidebar {
+    scrollbar-width: thin;
+}
+
+/* Ensure content doesn't overflow */
+.teacher-tab-content > * {
+    max-width: 100%;
+    overflow-x: auto;
+}

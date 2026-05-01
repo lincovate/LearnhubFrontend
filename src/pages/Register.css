@@ -1,0 +1,580 @@
+/* Register.css */
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Animated Background */
+.register-container::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  animation: registerPulse 20s ease-in-out infinite;
+}
+
+@keyframes registerPulse {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.1); opacity: 0.3; }
+}
+
+/* Card */
+.register-card {
+  max-width: 700px;
+  width: 100%;
+  background: white;
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 1;
+  animation: registerSlideUp 0.5s ease-out;
+}
+
+@keyframes registerSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Header */
+.register-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.register-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.register-logo-icon {
+  font-size: 36px;
+}
+
+.register-logo-text {
+  font-size: 28px;
+  font-weight: bold;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.register-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a202c;
+  margin-bottom: 8px;
+}
+
+.register-subtitle {
+  font-size: 14px;
+  color: #718096;
+}
+
+/* Error Message */
+.register-error {
+  background: #fed7d7;
+  color: #c53030;
+  padding: 12px 16px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  animation: registerShake 0.5s ease;
+}
+
+@keyframes registerShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.register-error-icon {
+  font-size: 16px;
+}
+
+/* Step Indicator */
+.register-step-indicator {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  position: relative;
+}
+
+.register-step-indicator::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #e2e8f0;
+  z-index: 0;
+}
+
+.register-step {
+  text-align: center;
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.register-step-number {
+  width: 40px;
+  height: 40px;
+  background: #e2e8f0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 8px;
+  font-weight: bold;
+  color: #718096;
+  transition: all 0.3s ease;
+}
+
+.register-step-active .register-step-number {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.register-step-label {
+  font-size: 12px;
+  color: #718096;
+  font-weight: 500;
+}
+
+.register-step-active .register-step-label {
+  color: #667eea;
+}
+
+/* Form */
+.register-form {
+  margin-top: 24px;
+}
+
+.register-step-content {
+  animation: registerFadeIn 0.3s ease;
+}
+
+@keyframes registerFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.register-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.register-input,
+.register-select,
+.register-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 14px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  background: white;
+  font-family: inherit;
+}
+
+.register-input:focus,
+.register-select:focus,
+.register-textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.register-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Phone Field with Prefix */
+.register-phone-field {
+  margin-bottom: 16px;
+}
+
+.register-phone-prefix {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.register-phone-prefix:focus-within {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.register-phone-prefix-text {
+  padding: 12px 16px;
+  background: #f7fafc;
+  color: #4a5568;
+  font-weight: 600;
+  font-size: 14px;
+  border-right: 1px solid #e2e8f0;
+}
+
+.register-phone-input {
+  flex: 1;
+  padding: 12px 16px;
+  font-size: 14px;
+  border: none;
+  background: white;
+  outline: none;
+}
+
+.register-input-error {
+  border-color: #f44336 !important;
+}
+
+.register-phone-error {
+  background: #ffebee;
+  color: #c62828;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-top: 8px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  animation: registerShake 0.3s ease;
+}
+
+.register-phone-hint {
+  margin-top: 6px;
+  font-size: 11px;
+  color: #a0aec0;
+}
+
+/* Password Field */
+.register-password-field {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.register-password-field .register-input {
+  padding-right: 48px;
+}
+
+.register-password-toggle {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0;
+  color: #a0aec0;
+  transition: color 0.3s ease;
+}
+
+.register-password-toggle:hover {
+  color: #667eea;
+}
+
+.register-password-hint {
+  font-size: 12px;
+  color: #718096;
+  margin-top: 8px;
+}
+
+/* Role Selector */
+.register-role-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 24px 0;
+}
+
+.register-role-card {
+  text-align: center;
+  padding: 32px 24px;
+  border: 2px solid #e2e8f0;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.register-role-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.register-role-selected {
+  border-color: #667eea;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+}
+
+.register-role-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.register-role-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a202c;
+  margin-bottom: 8px;
+}
+
+.register-role-description {
+  font-size: 12px;
+  color: #718096;
+}
+
+/* Info Box for Students */
+.register-info-box {
+  background: #e3f2fd;
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #1976d2;
+  font-size: 13px;
+}
+
+.register-info-icon {
+  font-size: 16px;
+}
+
+/* Hint Text */
+.register-hint-text {
+  font-size: 11px;
+  color: #a0aec0;
+  margin-top: -8px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+/* Buttons */
+.register-form-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.register-btn {
+  flex: 1;
+  padding: 14px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.register-btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.register-btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+}
+
+.register-btn-outline {
+  background: #f7fafc;
+  color: #4a5568;
+  border: 1px solid #e2e8f0;
+}
+
+.register-btn-outline:hover {
+  background: #edf2f7;
+  transform: translateY(-2px);
+}
+
+.register-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Loading Courses */
+.register-loading-courses {
+  padding: 12px;
+  text-align: center;
+  color: #718096;
+  background: #f7fafc;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  border: 1px solid #e2e8f0;
+}
+
+/* Spinner */
+.register-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: registerSpin 0.6s linear infinite;
+}
+
+@keyframes registerSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Footer */
+.register-footer {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #e2e8f0;
+  text-align: center;
+}
+
+.register-login-text {
+  color: #4a5568;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.register-login-link {
+  background: none;
+  border: none;
+  color: #667eea;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+
+.register-login-link:hover {
+  color: #5a67d8;
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .register-card {
+    padding: 24px 20px;
+  }
+  
+  .register-title {
+    font-size: 24px;
+  }
+  
+  .register-logo-icon {
+    font-size: 28px;
+  }
+  
+  .register-logo-text {
+    font-size: 22px;
+  }
+  
+  .register-form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  
+  .register-role-selector {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .register-role-card {
+    padding: 20px;
+  }
+  
+  .register-step-label {
+    font-size: 10px;
+  }
+  
+  .register-form-actions {
+    flex-direction: column;
+  }
+  
+  .register-btn {
+    width: 100%;
+  }
+  
+  .register-phone-prefix-text {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+  
+  .register-phone-input {
+    padding: 10px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .register-card {
+    padding: 20px 16px;
+  }
+  
+  .register-title {
+    font-size: 22px;
+  }
+  
+  .register-step-number {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+  
+  .register-step-indicator::before {
+    top: 16px;
+  }
+  
+  .register-phone-prefix-text {
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+  
+  .register-phone-input {
+    padding: 8px 10px;
+  }
+}

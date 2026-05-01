@@ -1,0 +1,14 @@
+@import './variables.css';
+@import './global.css';
+@import './App.css';
+@import '../components/Navbar.css';
+@import '../components/PrivateRoute.css';
+@import '../components/Loader.css';
+@import '../pages/Homepage.css';
+@import '../pages/Login.css';
+@import '../pages/Register.css';
+@import '../pages/ForgotPassword.css';
+@import '../pages/ResetPassword.css';
+@import '../pages/Profile.css';
+@import '../pages/StudentDashboard.css';
+@import '../pages/TeacherDashboard.css';
