@@ -132,6 +132,98 @@ export const api = {
       // Fallback to original URL
       return fileUrl;
   },
+  // Add these methods to your api object (after getDownloadUrl)
+
+// Download file as blob with authentication
+downloadFile: async (fileUrl) => {
+    if (!fileUrl) return null;
+    
+    // Get the authenticated download URL
+    let downloadUrl = fileUrl;
+    const match = fileUrl.match(/\/media\/([^\/]+)\/(\d{4})\/(\d{1,2})\/(\d{1,2})\/(.+)$/);
+    
+    if (match) {
+        const [, fileType, year, month, day, filename] = match;
+        downloadUrl = `${API_BASE_URL}/download/${fileType}/${year}/${month}/${day}/${encodeURIComponent(filename)}/`;
+    }
+    
+    try {
+        // Use apiClient directly (it includes auth token automatically)
+        const response = await apiClient.get(downloadUrl, {
+            responseType: 'blob'
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Download error:', error);
+        throw error;
+    }
+},
+
+// Trigger browser download
+triggerDownload: async (fileUrl, filename = null) => {
+    if (!fileUrl) {
+        console.error('No file URL provided');
+        return false;
+    }
+    
+    try {
+        // Extract filename from URL if not provided
+        if (!filename) {
+            const urlParts = fileUrl.split('/');
+            filename = urlParts[urlParts.length - 1];
+            // Remove query parameters if any
+            filename = filename.split('?')[0];
+        }
+        
+        // Show downloading indicator (optional)
+        console.log(`Downloading: ${filename}`);
+        
+        const blob = await api.downloadFile(fileUrl);
+        
+        // Create download link
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        
+        console.log('Download completed successfully');
+        return true;
+        
+    } catch (error) {
+        console.error('Trigger download error:', error);
+        
+        // Show user-friendly error message
+        if (error.response?.status === 401) {
+            alert('Your session has expired. Please login again.');
+            window.location.href = '/login';
+        } else if (error.response?.status === 404) {
+            alert('File not found. It may have been deleted.');
+        } else {
+            alert('Download failed. Please try again.');
+        }
+        return false;
+    }
+},
+
+// Alternative: Open download in new tab (for files that can be viewed in browser)
+openDownloadInNewTab: (fileUrl) => {
+    if (!fileUrl) return;
+    
+    const match = fileUrl.match(/\/media\/([^\/]+)\/(\d{4})\/(\d{1,2})\/(\d{1,2})\/(.+)$/);
+    if (match) {
+        const [, fileType, year, month, day, filename] = match;
+        const downloadUrl = `${API_BASE_URL}/download/${fileType}/${year}/${month}/${day}/${encodeURIComponent(filename)}/`;
+        
+        // Open in new tab (will use existing auth via interceptor? May not work for downloads)
+        window.open(downloadUrl, '_blank');
+    } else {
+        window.open(fileUrl, '_blank');
+    }
+},
   // Attendance Views
   getStudentAttendance: () => apiClient.get('/attendance/student/'),
   getTeacherAttendance: (courseId = null) => {
