@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "include": ["/*"],
+  "exclude": [
+    "/media/*",
+    "/api/*",
+    "/*.css",
+    "/*.js",
+    "/*.json",
+    "/*.png",
+    "/*.jpg",
+    "/*.jpeg",
+    "/*.svg",
+    "/*.ico",
+    "/assets/*"
+  ],
+  "redirects": [
+    {
+      "source": "/media/*",
+      "destination": "https://gith.pythonanywhere.com/media/:splat",
+      "statusCode": 200
+    },
+    {
+      "source": "/api/*",
+      "destination": "https://gith.pythonanywhere.com/api/:splat",
+      "statusCode": 200
+    }
+  ]
+}
