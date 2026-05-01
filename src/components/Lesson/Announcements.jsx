@@ -13,6 +13,7 @@ const Announcements = () => {
     const [showForm, setShowForm] = useState(false);
     const [editingAnnouncement, setEditingAnnouncement] = useState(null);
     const [currentCarouselIndex, setCurrentCarouselIndex] = useState(0);
+    const [downloading, setDownloading] = useState(false);
     const [formData, setFormData] = useState({
         title: '',
         content: '',
@@ -63,6 +64,33 @@ const Announcements = () => {
             console.error('Error fetching data:', error);
         } finally {
             setLoading(false);
+        }
+    };
+    
+    const handleDownload = async (attachmentUrl, filename) => {
+        if (!attachmentUrl) return;
+        
+        setDownloading(true);
+        try {
+            // Extract filename from URL if not provided
+            if (!filename) {
+                const urlParts = attachmentUrl.split('/');
+                filename = urlParts[urlParts.length - 1];
+                // Remove query parameters if any
+                filename = filename.split('?')[0];
+            }
+            
+            // Use the authenticated download method
+            const success = await api.triggerDownload(attachmentUrl, filename);
+            
+            if (!success) {
+                alert('Download failed. Please try again.');
+            }
+        } catch (error) {
+            console.error('Download error:', error);
+            alert('Error downloading file. Please check your connection.');
+        } finally {
+            setDownloading(false);
         }
     };
     
@@ -332,14 +360,13 @@ const Announcements = () => {
                                     </span>
                                 </div>
                                 {currentImportant.attachment && (
-                                    <a 
-                                        href={currentImportant.attachment} 
-                                        target="_blank" 
-                                        rel="noopener noreferrer"
+                                    <button 
+                                        onClick={() => handleDownload(currentImportant.attachment)}
                                         className="announcement-carousel-attachment"
+                                        disabled={downloading}
                                     >
-                                        📎 Download Attachment
-                                    </a>
+                                        📎 {downloading ? 'Downloading...' : 'Download Attachment'}
+                                    </button>
                                 )}
                                 <div className="announcement-carousel-footer">
                                     <span className="announcement-carousel-author">
@@ -428,14 +455,13 @@ const Announcements = () => {
                                 <div className="announcement-card-content">
                                     <p>{announcement.content}</p>
                                     {announcement.attachment && (
-                                        <a 
-                                            href={announcement.attachment} 
-                                            target="_blank" 
-                                            rel="noopener noreferrer"
+                                        <button 
+                                            onClick={() => handleDownload(announcement.attachment)}
                                             className="announcement-card-attachment"
+                                            disabled={downloading}
                                         >
-                                            📎 Download Attachment
-                                        </a>
+                                            📎 {downloading ? 'Downloading...' : 'Download Attachment'}
+                                        </button>
                                     )}
                                 </div>
                                 <div className="announcement-card-footer">

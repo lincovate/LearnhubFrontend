@@ -492,6 +492,51 @@
     to { transform: rotate(360deg); }
 }
 
+/* Download button styles - make buttons look like links */
+.announcement-carousel-attachment,
+.announcement-card-attachment {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: none;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.announcement-card-attachment {
+    background: var(--gray-100);
+    color: var(--primary-color);
+    margin-bottom: 0;
+}
+
+.announcement-carousel-attachment:hover:not(:disabled),
+.announcement-card-attachment:hover:not(:disabled) {
+    transform: translateY(-2px);
+}
+
+.announcement-carousel-attachment:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.announcement-card-attachment:hover:not(:disabled) {
+    background: var(--primary-color);
+    color: var(--white);
+}
+
+.announcement-carousel-attachment:disabled,
+.announcement-card-attachment:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .announcement-container {
