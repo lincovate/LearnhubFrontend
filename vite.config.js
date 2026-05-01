@@ -8,13 +8,13 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'http://localhost:2001',
+        target: 'https://gith.pythonanywhere.com/api/',
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path,
       },
       '/media': {  // ADD THIS - Proxy for media files
-        target: 'http://localhost:2001',
+        target: 'https://gith.pythonanywhere.com/media/',
         changeOrigin: true,
         secure: false,
       }
