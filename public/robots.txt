@@ -1,8 +1,10 @@
 User-agent: *
 Allow: /
 Allow: /More
-Allow: /Contact
+Allow: /Pricing
 Allow: /About
+
+
 
 # Block authenticated/private areas (adjust paths as needed)
 Disallow: /dashboard
@@ -10,5 +12,6 @@ Disallow: /account
 Disallow: /login
 Disallow: /register
 Disallow: /api
+
 
 Sitemap: https://learnhub1.lincovate.com/sitemap.xml
