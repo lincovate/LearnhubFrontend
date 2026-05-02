@@ -14,6 +14,8 @@ import TeacherDashboard from './pages/TeacherDashboard';
 import GradingView from './components/Lesson/GradingView';
 import CourseEnrollment from './components/Lesson/CourseEnrollment';
 import More from './pages/More';
+import About from './pages/About';
+import Pricing from './pages/Pricing';
 import Profile from './pages/Profile';
 
 function App() {
@@ -51,6 +53,8 @@ function App() {
               {/* Public Routes */}
               <Route path="/" element={<Homepage />} />
                <Route path="/More" element={<More />} />
+              <Route path="/About" element={<About />} />
+              <Route path="/Pricing" element={<Pricing />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />

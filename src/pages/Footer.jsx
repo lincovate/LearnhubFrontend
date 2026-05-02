@@ -7,23 +7,23 @@ const Footer = () => {
 
   const footerLinks = {
     Platform: [
-      { name: "About Us", path: "/about" },
+      { name: "About Us", path: "/About" },
       { name: "How It Works", path: "/More" },
-      { name: "Pricing", path: "/pricing" },
+      { name: "Pricing", path: "/Pricing" },
       { name: "Success Stories", path: "/success-stories" }
     ],
-    Resources: [
-      { name: "Blog", path: "/blog" },
-      { name: "Help Center", path: "/help" },
-      { name: "Community", path: "/community" },
-      { name: "Webinars", path: "/webinars" }
-    ],
-    Legal: [
-      { name: "Privacy Policy", path: "/privacy" },
-      { name: "Terms of Service", path: "/terms" },
-      { name: "Cookie Policy", path: "/cookies" },
-      { name: "Accessibility", path: "/accessibility" }
-    ]
+    // Resources: [
+    //   { name: "Blog", path: "/blog" },
+    //   { name: "Help Center", path: "/help" },
+    //   { name: "Community", path: "/community" },
+    //   { name: "Webinars", path: "/webinars" }
+    // ],
+    // Legal: [
+    //   { name: "Privacy Policy", path: "/privacy" },
+    //   { name: "Terms of Service", path: "/terms" },
+    //   { name: "Cookie Policy", path: "/cookies" },
+    //   { name: "Accessibility", path: "/accessibility" }
+    // ]
   };
 
   const socialLinks = [
@@ -54,7 +54,7 @@ const Footer = () => {
               Transforming education through innovation and accessibility. 
               Empowering learners worldwide to achieve their dreams.
             </p>
-            <div className="footer-social">
+            {/* <div className="footer-social">
               {socialLinks.map((social, index) => (
                 <a 
                   key={index}
@@ -67,7 +67,7 @@ const Footer = () => {
                   {social.icon}
                 </a>
               ))}
-            </div>
+            </div> */}
           </div>
 
           {/* Links Sections */}
@@ -117,6 +117,7 @@ const Footer = () => {
             <p className="footer-copyright">
               © {currentYear} LearnHub. All rights reserved.
             </p>
+            <p><b><i>Powered by Lincovate Technologies</i></b></p>
             <div className="footer-payment">
               <span>Visa</span>
               <span>Mastercard</span>

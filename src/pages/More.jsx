@@ -77,7 +77,7 @@ const More = () => {
       color: "#f59e0b",
       screenPreview: {
         type: "profile",
-        fields: ["Profile Picture", "Address", "Phone Number", "Bio"],
+        fields: ["Profile Picture", "Address", "Phone Number", "Username"],
         action: "Save Profile"
       },
       do: [
@@ -180,7 +180,7 @@ const More = () => {
       color: "#667eea",
       screenPreview: {
         type: "teacher_register",
-        fields: ["Full Name", "Email", "Employee ID", "Department", "Years of Experience", "Password"],
+        fields: ["First Name", "Last Name", "Contact", "Email", "Employee ID", "Courses", "Department", "Teaching Station", "Username", "Password"],
         action: "Register as Teacher"
       },
       do: [
@@ -206,7 +206,7 @@ const More = () => {
       screenPreview: {
         type: "approval",
         status: "Under Review",
-        message: "Your application is being processed by our admin team",
+        message: "Your application is being processed by our admin team. An email will be sent to you once a decision has been made.",
         action: "Check Status"
       },
       do: [
@@ -256,8 +256,8 @@ const More = () => {
       color: "#ef4444",
       screenPreview: {
         type: "teacher_profile",
-        fields: ["Profile Picture", "Bio", "Qualifications", "Office Location", "Office Hours"],
-        action: "Publish Profile"
+        fields: ["Profile Picture", "Bio", "Qualifications", "Office Location", "EmailApproval"],
+        action: "Finalise Profile"
       },
       do: [
         "Add professional qualifications",
@@ -479,8 +479,8 @@ const More = () => {
         </div>
         <div className="more-start-screen">
           <div className="more-start-content">
-            <div className="more-start-icon">🚀</div>
-            <h2>Ready to Begin Your Journey?</h2>
+            <div className="more-start-icon">📚</div>
+            <h2>Registration process steps</h2>
             <p>Explore the step-by-step guide to joining our learning platform</p>
             <div className="more-toggle-start">
               <button 
