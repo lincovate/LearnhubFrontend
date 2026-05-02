@@ -13,6 +13,7 @@ import StudentDashboard from './pages/StudentDashboard';
 import TeacherDashboard from './pages/TeacherDashboard';
 import GradingView from './components/Lesson/GradingView';
 import CourseEnrollment from './components/Lesson/CourseEnrollment';
+import More from './pages/More';
 import Profile from './pages/Profile';
 
 function App() {
@@ -49,6 +50,7 @@ function App() {
             <Routes>
               {/* Public Routes */}
               <Route path="/" element={<Homepage />} />
+               <Route path="/More" element={<More />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
