@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import Mission from './Mission';
-import LearnMore from './Learnmore';
+import LearnMore from './LearnMore';
 import Footer from './Footer';
 import Testimonial from './Testimonial';
 import './Homepage.css';
