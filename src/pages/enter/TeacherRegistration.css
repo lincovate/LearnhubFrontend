@@ -1,0 +1,385 @@
+/* TeacherRegistration.css */
+.teacherreg-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.teacherreg-container::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  animation: teacherregPulse 20s ease-in-out infinite;
+}
+
+@keyframes teacherregPulse {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.1); opacity: 0.3; }
+}
+
+.teacherreg-card {
+  max-width: 700px;
+  width: 100%;
+  background: white;
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 1;
+  animation: teacherregSlideUp 0.5s ease-out;
+}
+
+@keyframes teacherregSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.teacherreg-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.teacherreg-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.teacherreg-logo-icon {
+  font-size: 36px;
+}
+
+.teacherreg-logo-text {
+  font-size: 28px;
+  font-weight: bold;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.teacherreg-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a202c;
+  margin-bottom: 8px;
+}
+
+.teacherreg-subtitle {
+  font-size: 14px;
+  color: #718096;
+}
+
+.teacherreg-error {
+  background: #fed7d7;
+  color: #c53030;
+  padding: 12px 16px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  animation: teacherregShake 0.5s ease;
+}
+
+@keyframes teacherregShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.teacherreg-error-icon {
+  font-size: 16px;
+}
+
+.teacherreg-form {
+  margin-top: 24px;
+}
+
+.teacherreg-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.teacherreg-form-group {
+  margin-bottom: 20px;
+}
+
+.teacherreg-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #2d3748;
+  font-size: 14px;
+}
+
+.teacherreg-input,
+.teacherreg-select,
+.teacherreg-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 14px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  background: white;
+  font-family: inherit;
+}
+
+.teacherreg-input:focus,
+.teacherreg-select:focus,
+.teacherreg-textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.teacherreg-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.teacherreg-phone-field {
+  margin-bottom: 0px;
+}
+
+.teacherreg-phone-prefix {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.teacherreg-phone-prefix:focus-within {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.teacherreg-phone-prefix-text {
+  padding: 12px 16px;
+  background: #f7fafc;
+  color: #4a5568;
+  font-weight: 600;
+  font-size: 14px;
+  border-right: 1px solid #e2e8f0;
+}
+
+.teacherreg-phone-input {
+  flex: 1;
+  padding: 12px 16px;
+  font-size: 14px;
+  border: none;
+  background: white;
+  outline: none;
+}
+
+.teacherreg-input-error {
+  border-color: #f44336 !important;
+}
+
+.teacherreg-phone-error {
+  background: #ffebee;
+  color: #c62828;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-top: 8px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  animation: teacherregShake 0.3s ease;
+}
+
+.teacherreg-phone-hint {
+  margin-top: 6px;
+  font-size: 11px;
+  color: #a0aec0;
+}
+
+.teacherreg-loading-courses {
+  padding: 12px;
+  text-align: center;
+  color: #718096;
+  background: #f7fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.teacherreg-hint-text {
+  font-size: 11px;
+  color: #a0aec0;
+  margin-top: 8px;
+  text-align: center;
+}
+
+.teacherreg-password-field {
+  position: relative;
+}
+
+.teacherreg-password-field .teacherreg-input {
+  padding-right: 48px;
+}
+
+.teacherreg-password-toggle {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0;
+  color: #a0aec0;
+  transition: color 0.3s ease;
+}
+
+.teacherreg-password-toggle:hover {
+  color: #667eea;
+}
+
+.teacherreg-password-hint {
+  font-size: 12px;
+  color: #718096;
+  margin-top: 8px;
+  margin-bottom: 20px;
+}
+
+.teacherreg-submit-btn {
+  width: 100%;
+  padding: 14px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.teacherreg-submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+}
+
+.teacherreg-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.teacherreg-spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: teacherregSpin 0.6s linear infinite;
+}
+
+@keyframes teacherregSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.teacherreg-footer {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #e2e8f0;
+  text-align: center;
+}
+
+.teacherreg-login-text {
+  color: #4a5568;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.teacherreg-login-link {
+  background: none;
+  border: none;
+  color: #667eea;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+
+.teacherreg-login-link:hover {
+  color: #5a67d8;
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .teacherreg-card {
+    padding: 24px 20px;
+  }
+  
+  .teacherreg-title {
+    font-size: 24px;
+  }
+  
+  .teacherreg-logo-icon {
+    font-size: 28px;
+  }
+  
+  .teacherreg-logo-text {
+    font-size: 22px;
+  }
+  
+  .teacherreg-form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  
+  .teacherreg-phone-prefix-text {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+  
+  .teacherreg-phone-input {
+    padding: 10px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .teacherreg-card {
+    padding: 20px 16px;
+  }
+  
+  .teacherreg-title {
+    font-size: 22px;
+  }
+}

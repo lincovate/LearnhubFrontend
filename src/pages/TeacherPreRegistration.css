@@ -1,0 +1,419 @@
+/* TeacherPreRegistration.css */
+.teacherprereg-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.teacherprereg-container::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  animation: teacherpreregPulse 20s ease-in-out infinite;
+}
+
+@keyframes teacherpreregPulse {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.1); opacity: 0.3; }
+}
+
+.teacherprereg-card {
+  max-width: 700px;
+  width: 100%;
+  background: white;
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 1;
+  animation: teacherpreregSlideUp 0.5s ease-out;
+}
+
+@keyframes teacherpreregSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.teacherprereg-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.teacherprereg-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.teacherprereg-logo-icon {
+  font-size: 36px;
+}
+
+.teacherprereg-logo-text {
+  font-size: 28px;
+  font-weight: bold;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.teacherprereg-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a202c;
+  margin-bottom: 8px;
+}
+
+.teacherprereg-subtitle {
+  font-size: 14px;
+  color: #718096;
+  line-height: 1.5;
+}
+
+.teacherprereg-error {
+  background: #fed7d7;
+  color: #c53030;
+  padding: 12px 16px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  animation: teacherpreregShake 0.5s ease;
+}
+
+.teacherprereg-success {
+  background: #c6f6d5;
+  color: #22543d;
+  padding: 12px 16px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  animation: teacherpreregFadeIn 0.5s ease;
+}
+
+@keyframes teacherpreregShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+@keyframes teacherpreregFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.teacherprereg-error-icon,
+.teacherprereg-success-icon {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.teacherprereg-form {
+  margin-top: 24px;
+}
+
+.teacherprereg-form-group {
+  margin-bottom: 20px;
+}
+
+.teacherprereg-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #2d3748;
+  font-size: 14px;
+}
+
+.teacherprereg-input,
+.teacherprereg-select {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 14px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  background: white;
+  font-family: inherit;
+}
+
+.teacherprereg-input:focus,
+.teacherprereg-select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.teacherprereg-phone-field {
+  margin-top: 4px;
+}
+
+.teacherprereg-phone-prefix {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.teacherprereg-phone-prefix:focus-within {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.teacherprereg-phone-prefix-text {
+  padding: 12px 16px;
+  background: #f7fafc;
+  color: #4a5568;
+  font-weight: 600;
+  font-size: 14px;
+  border-right: 1px solid #e2e8f0;
+}
+
+.teacherprereg-phone-input {
+  flex: 1;
+  padding: 12px 16px;
+  font-size: 14px;
+  border: none;
+  background: white;
+  outline: none;
+}
+
+.teacherprereg-input-error {
+  border-color: #f44336 !important;
+}
+
+.teacherprereg-phone-error {
+  background: #ffebee;
+  color: #c62828;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-top: 8px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  animation: teacherpreregShake 0.3s ease;
+}
+
+.teacherprereg-course-entry {
+  margin-bottom: 12px;
+}
+
+.teacherprereg-course-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.teacherprereg-course-field {
+  flex: 1;
+}
+
+.teacherprereg-btn-remove {
+  background: #dc3545;
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.teacherprereg-btn-remove:hover {
+  background: #c82333;
+  transform: scale(1.05);
+}
+
+.teacherprereg-btn-add-course {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.teacherprereg-btn-add-course:hover {
+  background: #218838;
+  transform: translateY(-2px);
+}
+
+.teacherprereg-hint-text {
+  display: block;
+  margin-top: 8px;
+  font-size: 11px;
+  color: #a0aec0;
+}
+
+.teacherprereg-submit-btn {
+  width: 100%;
+  padding: 14px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.teacherprereg-submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+}
+
+.teacherprereg-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.teacherprereg-spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: teacherpreregSpin 0.6s linear infinite;
+}
+
+@keyframes teacherpreregSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.teacherprereg-footer {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.teacherprereg-info {
+  color: #4a5568;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.teacherprereg-info-icon {
+  font-size: 16px;
+}
+
+.teacherprereg-slide-down {
+  animation: teacherpreregSlideDown 0.3s ease-out;
+}
+
+@keyframes teacherpreregSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 640px) {
+  .teacherprereg-card {
+    padding: 24px 20px;
+  }
+  
+  .teacherprereg-title {
+    font-size: 24px;
+  }
+  
+  .teacherprereg-logo-icon {
+    font-size: 28px;
+  }
+  
+  .teacherprereg-logo-text {
+    font-size: 22px;
+  }
+  
+  .teacherprereg-course-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .teacherprereg-btn-remove {
+    width: 100%;
+    margin-top: 8px;
+  }
+  
+  .teacherprereg-phone-prefix-text {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+  
+  .teacherprereg-phone-input {
+    padding: 10px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .teacherprereg-card {
+    padding: 20px 16px;
+  }
+  
+  .teacherprereg-title {
+    font-size: 22px;
+  }
+  
+  .teacherprereg-subtitle {
+    font-size: 13px;
+  }
+}

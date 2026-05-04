@@ -61,6 +61,8 @@ export const api = {
   logout: (refreshToken) => apiClient.post('/logout/', { refresh_token: refreshToken }),
   registerStudent: (data) => apiClient.post('/register/student/', data),
   registerTeacher: (data) => apiClient.post('/register/teacher/', data),
+  teacherPreRegister: (data) => apiClient.post('/api/register/', data),
+  submitContact: (data) => apiClient.post('/api/contact/', data),
   
   // Password Management
   forgotPassword: (email) => apiClient.post('/forgot-password/', { email }),
@@ -270,6 +272,7 @@ openDownloadInNewTab: (fileUrl) => {
   
   // Teacher's courses
   getMyCourses: () => apiClient.get('/my-courses/'),
+ 
 };
 
 export default apiClient;

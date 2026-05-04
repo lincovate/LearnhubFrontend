@@ -16,6 +16,8 @@ import CourseEnrollment from './components/Lesson/CourseEnrollment';
 import More from './pages/More';
 import About from './pages/About';
 import Pricing from './pages/Pricing';
+import Contact from './pages/Contact';
+import TeacherRegistration from './pages/enter/TeacherRegistration';
 import Profile from './pages/Profile';
 
 function App() {
@@ -59,6 +61,8 @@ function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/teacher-registration" element={<TeacherRegistration />} />
+              <Route path="/contact" element={<Contact />} />
               
               {/* Student Dashboard - Handles all /student/* routes internally */}
               <Route path="/student/*" element={
