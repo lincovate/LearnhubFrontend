@@ -24,7 +24,7 @@ const GradingView = () => {
     const [previewFile, setPreviewFile] = useState(null);
     const [previewType, setPreviewType] = useState(null);
     const [activeTab, setActiveTab] = useState('current');
-    const [downloadingId, setDownloadingId] = useState(null); // Track which submission is downloading
+    const [downloadingId, setDownloadingId] = useState(null);
 
     // Helper function to get week number from date
     const getWeekNumber = (date) => {
@@ -52,8 +52,10 @@ const GradingView = () => {
         const ext = filename.split('.').pop().toLowerCase();
         const imageTypes = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'];
         const pdfTypes = ['pdf'];
+        const wordTypes = ['doc', 'docx'];
         if (imageTypes.includes(ext)) return 'image';
         if (pdfTypes.includes(ext)) return 'pdf';
+        if (wordTypes.includes(ext)) return 'word';
         return 'document';
     };
 
@@ -61,6 +63,7 @@ const GradingView = () => {
         switch(fileType) {
             case 'image': return '🖼️';
             case 'pdf': return '📕';
+            case 'word': return '📘';
             default: return '📎';
         }
     };
@@ -69,22 +72,32 @@ const GradingView = () => {
         switch(fileType) {
             case 'image': return '#9c27b0';
             case 'pdf': return '#f44336';
+            case 'word': return '#2196f3';
             default: return '#9e9e9e';
         }
     };
 
-    const handleDownload = async (attachmentUrl, submissionId, filename) => {
-        if (!attachmentUrl) return;
+    const getFileUrl = (filePath) => {
+        if (!filePath) return '#';
+        if (filePath.startsWith('http')) return filePath;
+        if (!filePath.startsWith('/media/')) {
+            return `/media/${filePath}`;
+        }
+        return filePath;
+    };
+
+    const handleDownload = async (fileUrl, fileId, filename) => {
+        if (!fileUrl) return;
         
-        setDownloadingId(submissionId);
+        setDownloadingId(fileId);
         try {
             if (!filename) {
-                const urlParts = attachmentUrl.split('/');
+                const urlParts = fileUrl.split('/');
                 filename = urlParts[urlParts.length - 1];
                 filename = filename.split('?')[0];
             }
             
-            const success = await api.triggerDownload(attachmentUrl, filename);
+            const success = await api.triggerDownload(fileUrl, filename);
             
             if (!success) {
                 alert('Download failed. Please try again.');
@@ -94,6 +107,15 @@ const GradingView = () => {
             alert('Error downloading file. Please check your connection.');
         } finally {
             setDownloadingId(null);
+        }
+    };
+
+    const handlePreview = (fileUrl, fileType, filename) => {
+        if (fileType === 'image' || fileType === 'pdf') {
+            setPreviewFile(fileUrl);
+            setPreviewType(fileType);
+        } else {
+            handleDownload(fileUrl, null, filename);
         }
     };
 
@@ -370,7 +392,7 @@ const GradingView = () => {
                             <select value={weekFilter} onChange={(e) => setWeekFilter(e.target.value)}>
                                 <option value="">All Weeks</option>
                                 {[...Array(12)].map((_, i) => (
-                                    <option key={i + 1} value={i + 18}>Week {i + 1}</option>
+                                    <option key={i + 1} value={i + 1}>Week {i + 1}</option>
                                 ))}
                             </select>
                         </div>
@@ -416,11 +438,17 @@ const GradingView = () => {
 
     function renderSubmissions(submissionsList, showAssignmentInfo = false) {
         return submissionsList.map(sub => {
-            const fileType = getFileType(sub.submission_file);
             const isGraded = !!sub.grade_info;
             const status = getSubmissionStatus(sub);
             const weekNumber = getWeekNumber(sub.submitted_at);
             const weekRange = getWeekRange(sub.submitted_at);
+            
+            // Get files from the submission (supports both old and new format)
+            const files = sub.files || (sub.submission_file ? [{ 
+                id: sub.id, 
+                file: sub.submission_file, 
+                filename: sub.submission_file?.split('/').pop() 
+            }] : []);
             
             return (
                 <div key={sub.id} className={`grading-view-submission-card grading-view-submission-${status}`}>
@@ -456,31 +484,47 @@ const GradingView = () => {
                             <div className="grading-view-meta-item">📅 Submitted: {new Date(sub.submitted_at).toLocaleString()}</div>
                             <div className="grading-view-meta-item">📊 Total Marks: {sub.assignment_total_marks || 100}</div>
                             <div className="grading-view-meta-item">🗓️ Week {weekNumber} ({weekRange})</div>
+                            <div className="grading-view-meta-item">📎 Files: {files.length}</div>
                         </div>
-                        <div className="grading-view-submission-file-section">
-                            <div className="grading-view-file-badge" style={{ background: getFileBadgeColor(fileType) }}>
-                                {getFileIcon(fileType)} {fileType.toUpperCase()}
-                            </div>
-                            <div className="grading-view-file-info">
-                                <span className="grading-view-file-name">{sub.submission_file.split('/').pop()}</span>
-                                <div className="grading-view-file-actions">
-                                    <button 
-                                        onClick={() => handleDownload(sub.submission_file, sub.id)}
-                                        className="grading-view-download-link"
-                                        disabled={downloadingId === sub.id}
-                                        style={{ background: 'none', border: 'none', cursor: downloadingId === sub.id ? 'not-allowed' : 'pointer' }}
-                                    >
-                                        📎 {downloadingId === sub.id ? 'Downloading...' : 'Download'}
-                                    </button>
-                                    {fileType === 'image' && (
-                                        <button className="grading-view-preview-link" onClick={() => { setPreviewFile(sub.submission_file); setPreviewType('image'); }}>👁️ Preview</button>
-                                    )}
-                                    {fileType === 'pdf' && (
-                                        <button className="grading-view-preview-link" onClick={() => { setPreviewFile(sub.submission_file); setPreviewType('pdf'); }}>📄 View PDF</button>
-                                    )}
-                                </div>
+                        
+                        {/* Display all submitted files */}
+                        <div className="grading-view-submission-files-section">
+                            <div className="grading-view-files-header">Submitted Files ({files.length}):</div>
+                            <div className="grading-view-files-list">
+                                {files.map((file, idx) => {
+                                    const fileUrl = getFileUrl(file.file);
+                                    const fileType = getFileType(file.filename);
+                                    return (
+                                        <div key={file.id || idx} className="grading-view-file-item">
+                                            <div className="grading-view-file-badge" style={{ background: getFileBadgeColor(fileType) }}>
+                                                {getFileIcon(fileType)} {fileType.toUpperCase()}
+                                            </div>
+                                            <div className="grading-view-file-info">
+                                                <span className="grading-view-file-name">{file.filename}</span>
+                                                <div className="grading-view-file-actions">
+                                                    <button 
+                                                        onClick={() => handleDownload(fileUrl, file.id || idx, file.filename)}
+                                                        className="grading-view-download-link"
+                                                        disabled={downloadingId === (file.id || idx)}
+                                                    >
+                                                        📎 {downloadingId === (file.id || idx) ? 'Downloading...' : 'Download'}
+                                                    </button>
+                                                    {(fileType === 'image' || fileType === 'pdf') && (
+                                                        <button 
+                                                            className="grading-view-preview-link" 
+                                                            onClick={() => handlePreview(fileUrl, fileType, file.filename)}
+                                                        >
+                                                            👁️ Preview
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
                             </div>
                         </div>
+                        
                         <div className="grading-view-grading-section">
                             <div className="grading-view-grade-input-group">
                                 <label>Grade (0-100):</label>

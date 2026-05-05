@@ -19,6 +19,11 @@ const Assignments = () => {
     const [previewFile, setPreviewFile] = useState(null);
     const [previewType, setPreviewType] = useState(null);
     const [downloadingId, setDownloadingId] = useState(null);
+    
+    // State for multiple file upload
+    const [selectedFiles, setSelectedFiles] = useState({});
+    const [uploading, setUploading] = useState({});
+    
     const [formData, setFormData] = useState({
         title: '',
         description: '',
@@ -32,10 +37,11 @@ const Assignments = () => {
     const getFileUrl = (filePath) => {
         if (!filePath) return '#';
         if (filePath.startsWith('http')) return filePath;
-        if (!filePath.startsWith('/media/')) {
-            return `/media/${filePath}`;
+        // Handle both absolute and relative paths
+        if (filePath.startsWith('/media/')) {
+            return filePath;
         }
-        return filePath;
+        return `/media/${filePath}`;
     };
     
     const getFileType = (filename) => {
@@ -92,13 +98,105 @@ const Assignments = () => {
         }
     };
 
-    const handlePreview = (fileUrl, fileType) => {
-        setPreviewFile(fileUrl);
-        setPreviewType(fileType);
+    const handlePreview = (fileUrl, fileType, filename) => {
+        if (fileType === 'image') {
+            // For images, show the image directly
+            setPreviewFile(fileUrl);
+            setPreviewType('image');
+        } else if (fileType === 'pdf') {
+            setPreviewFile(fileUrl);
+            setPreviewType('pdf');
+        } else {
+            // For other files, just download
+            handleDownload(fileUrl, null, filename);
+        }
     };
 
     const handleViewSubmissions = (assignmentId) => {
         navigate(`/teacher/grading/${assignmentId}`);
+    };
+    
+    // Handle file selection for multiple files
+    const handleFileSelect = (assignmentId, index, file) => {
+        setSelectedFiles(prev => ({
+            ...prev,
+            [assignmentId]: {
+                ...prev[assignmentId],
+                [index]: file
+            }
+        }));
+    };
+    
+    // Add another file input
+    const handleAddFile = (assignmentId) => {
+        setSelectedFiles(prev => {
+            const currentFiles = prev[assignmentId] || {};
+            const nextIndex = Object.keys(currentFiles).length;
+            return {
+                ...prev,
+                [assignmentId]: {
+                    ...currentFiles,
+                    [nextIndex]: null
+                }
+            };
+        });
+    };
+    
+    // Remove a file from selection
+    const handleRemoveFile = (assignmentId, index) => {
+        setSelectedFiles(prev => {
+            const newFiles = { ...prev[assignmentId] };
+            delete newFiles[index];
+            // Re-index the files
+            const reindexed = {};
+            Object.values(newFiles).forEach((file, idx) => {
+                reindexed[idx] = file;
+            });
+            return {
+                ...prev,
+                [assignmentId]: reindexed
+            };
+        });
+    };
+    
+    // Submit multiple files
+    const handleSubmitAssignment = async (assignmentId) => {
+        const files = selectedFiles[assignmentId];
+        if (!files || Object.keys(files).length === 0) {
+            showMessage('error', 'Please select at least one file');
+            return;
+        }
+        
+        const fileList = Object.values(files).filter(f => f !== null);
+        if (fileList.length === 0) {
+            showMessage('error', 'Please select at least one file');
+            return;
+        }
+        
+        setUploading(prev => ({ ...prev, [assignmentId]: true }));
+        
+        const formData = new FormData();
+        fileList.forEach(file => {
+            formData.append('files', file);
+        });
+        
+        try {
+            await api.submitAssignment(assignmentId, formData);
+            showMessage('success', `Successfully submitted ${fileList.length} file(s)!`);
+            
+            // Clear selected files for this assignment
+            setSelectedFiles(prev => {
+                const newState = { ...prev };
+                delete newState[assignmentId];
+                return newState;
+            });
+            
+            fetchData();
+        } catch (error) {
+            showMessage('error', error.response?.data?.error || 'Failed to submit');
+        } finally {
+            setUploading(prev => ({ ...prev, [assignmentId]: false }));
+        }
     };
 
     useEffect(() => {
@@ -126,12 +224,10 @@ const Assignments = () => {
             let assignmentsRes;
             
             if (isTeacher) {
-                // For teachers: get their assigned courses
                 const myCoursesRes = await api.getMyCourses();
                 coursesRes = myCoursesRes;
                 assignmentsRes = await api.getAssignments();
             } else {
-                // For students: get all courses (filtered by backend)
                 coursesRes = await api.getCourses();
                 assignmentsRes = await api.getAssignments();
             }
@@ -282,22 +378,6 @@ const Assignments = () => {
         }
     };
     
-    const handleSubmitAssignment = async (assignmentId, file) => {
-        if (!file) {
-            showMessage('error', 'Please select a file');
-            return;
-        }
-        const formData = new FormData();
-        formData.append('submission_file', file);
-        try {
-            await api.submitAssignment(assignmentId, formData);
-            showMessage('success', 'Assignment submitted successfully!');
-            fetchData();
-        } catch (error) {
-            showMessage('error', error.response?.data?.error || 'Failed to submit');
-        }
-    };
-    
     const getStatusColor = (status) => {
         switch(status) {
             case 'published': return '#4caf50';
@@ -316,7 +396,6 @@ const Assignments = () => {
         );
     }
     
-    // Get the list of assignments to display (filtered for teachers, all for students)
     const displayAssignments = isTeacher ? filteredAssignments : assignments;
     
     return (
@@ -337,7 +416,6 @@ const Assignments = () => {
                 )}
             </div>
             
-            {/* Course Filter for Teachers */}
             {isTeacher && courses.length > 0 && (
                 <div className="assignment-filter-section">
                     <div className="assignment-filter-group">
@@ -421,7 +499,7 @@ const Assignments = () => {
                     </div>
                     <div className="assignment-form-group">
                         <label className="assignment-form-label">Attachment</label>
-                        <input type="file" onChange={(e) => setFormData({...formData, attachment: e.target.files[0]})} className="assignment-form-file" accept=".pdf,.doc,.docx,.txt,.zip" />
+                        <input type="file" onChange={(e) => setFormData({...formData, attachment: e.target.files[0]})} className="assignment-form-file" accept=".pdf,.doc,.docx,.txt,.zip,.jpg,.jpeg,.png" />
                     </div>
                     <div className="assignment-form-actions">
                         <button type="submit" className="assignment-save-btn">{editingAssignment ? 'Update' : 'Create'}</button>
@@ -481,12 +559,17 @@ const Assignments = () => {
                                                         onClick={() => handleDownload(assignment.attachment, assignment.id)}
                                                         className="assignment-download-link"
                                                         disabled={downloadingId === assignment.id}
-                                                        style={{ background: 'none', border: 'none', cursor: downloadingId === assignment.id ? 'not-allowed' : 'pointer' }}
                                                     >
                                                         📎 {downloadingId === assignment.id ? 'Downloading...' : 'Download'}
                                                     </button>
-                                                    {fileType === 'image' && <button className="assignment-preview-link" onClick={() => handlePreview(fileUrl, 'image')}>👁️ Preview</button>}
-                                                    {fileType === 'pdf' && <button className="assignment-preview-link" onClick={() => handlePreview(fileUrl, 'pdf')}>📄 Preview</button>}
+                                                    {(fileType === 'image' || fileType === 'pdf') && (
+                                                        <button 
+                                                            className="assignment-preview-link" 
+                                                            onClick={() => handlePreview(fileUrl, fileType, assignment.attachment.split('/').pop())}
+                                                        >
+                                                            👁️ Preview
+                                                        </button>
+                                                    )}
                                                 </div>
                                             </div>
                                         </div>
@@ -498,6 +581,45 @@ const Assignments = () => {
                                                     <div className="assignment-success-icon">✅</div>
                                                     <div><strong>Submitted!</strong> on {new Date(submissions[assignment.id].submitted_at).toLocaleString()}</div>
                                                     {submissions[assignment.id].is_late && <div className="assignment-late-badge">⚠️ Late Submission</div>}
+                                                    
+                                                    {/* Display submitted files */}
+                                                    {submissions[assignment.id].files && submissions[assignment.id].files.length > 0 && (
+                                                        <div className="assignment-submitted-files">
+                                                            <strong>Submitted Files ({submissions[assignment.id].files.length}):</strong>
+                                                            <div className="assignment-submitted-files-list">
+                                                                {submissions[assignment.id].files.map((file, idx) => {
+                                                                    const subFileType = getFileType(file.filename);
+                                                                    const subFileUrl = getFileUrl(file.file);
+                                                                    return (
+                                                                        <div key={file.id || idx} className="assignment-submitted-file-item">
+                                                                            <span className="assignment-file-badge-small" style={{ background: getFileBadgeColor(subFileType) }}>
+                                                                                {getFileIcon(subFileType)}
+                                                                            </span>
+                                                                            <span className="assignment-file-name">{file.filename}</span>
+                                                                            <div className="assignment-file-actions">
+                                                                                <button 
+                                                                                    onClick={() => handleDownload(file.file, assignment.id, file.filename)}
+                                                                                    className="assignment-download-link-small"
+                                                                                    disabled={downloadingId === file.id}
+                                                                                >
+                                                                                    📥
+                                                                                </button>
+                                                                                {(subFileType === 'image' || subFileType === 'pdf') && (
+                                                                                    <button 
+                                                                                        onClick={() => handlePreview(subFileUrl, subFileType, file.filename)}
+                                                                                        className="assignment-preview-link-small"
+                                                                                    >
+                                                                                        👁️
+                                                                                    </button>
+                                                                                )}
+                                                                            </div>
+                                                                        </div>
+                                                                    );
+                                                                })}
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                    
                                                     {submissions[assignment.id].grade_info && (
                                                         <div className="assignment-grade-result">
                                                             <div>Score: {submissions[assignment.id].grade_info.marks_obtained}/{assignment.total_marks}</div>
@@ -508,15 +630,66 @@ const Assignments = () => {
                                                 </div>
                                             ) : (
                                                 <div className="assignment-submit-form">
-                                                    <input type="file" id={`file-${assignment.id}`} onChange={(e) => handleSubmitAssignment(assignment.id, e.target.files[0])} className="assignment-file-input" accept=".pdf,.doc,.docx,.txt,.zip,.jpg,.png" />
-                                                    <label htmlFor={`file-${assignment.id}`} className="assignment-file-label">📁 Choose File</label>
+                                                    <div className="assignment-files-list">
+                                                        {selectedFiles[assignment.id] && Object.entries(selectedFiles[assignment.id]).map(([index, file]) => (
+                                                            <div key={index} className="assignment-file-input-group">
+                                                                <div className="assignment-file-input-wrapper">
+                                                                    <input 
+                                                                        type="file" 
+                                                                        id={`file-${assignment.id}-${index}`}
+                                                                        onChange={(e) => handleFileSelect(assignment.id, parseInt(index), e.target.files[0])}
+                                                                        className="assignment-file-input-hidden"
+                                                                        accept=".pdf,.doc,.docx,.txt,.zip,.jpg,.jpeg,.png,.gif,.webp"
+                                                                    />
+                                                                    <label htmlFor={`file-${assignment.id}-${index}`} className="assignment-file-label">
+                                                                        📁 {file ? file.name : 'Choose File'}
+                                                                    </label>
+                                                                    {file && (
+                                                                        <button 
+                                                                            type="button"
+                                                                            className="assignment-remove-file-btn"
+                                                                            onClick={() => handleRemoveFile(assignment.id, parseInt(index))}
+                                                                        >
+                                                                            ✖
+                                                                        </button>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                    
+                                                    <button 
+                                                        type="button"
+                                                        className="assignment-add-file-btn"
+                                                        onClick={() => handleAddFile(assignment.id)}
+                                                    >
+                                                        + Add Another File
+                                                    </button>
+                                                    
+                                                    <button 
+                                                        type="button"
+                                                        className="assignment-submit-btn"
+                                                        onClick={() => handleSubmitAssignment(assignment.id)}
+                                                        disabled={uploading[assignment.id] || !selectedFiles[assignment.id] || Object.keys(selectedFiles[assignment.id]).length === 0}
+                                                    >
+                                                        {uploading[assignment.id] ? (
+                                                            <>
+                                                                <span className="assignment-spinner-small"></span>
+                                                                Uploading...
+                                                            </>
+                                                        ) : (
+                                                            '📤 Submit Assignment'
+                                                        )}
+                                                    </button>
                                                 </div>
                                             )}
                                         </div>
                                     )}
                                     {isTeacher && (
                                         <div className="assignment-teacher-actions">
-                                            <button className="assignment-view-submissions-btn" onClick={() => handleViewSubmissions(assignment.id)}>📋 View Submissions ({assignment.submissions_count})</button>
+                                            <button className="assignment-view-submissions-btn" onClick={() => handleViewSubmissions(assignment.id)}>
+                                                📋 View Submissions ({assignment.submissions_count})
+                                            </button>
                                         </div>
                                     )}
                                 </div>
@@ -529,12 +702,26 @@ const Assignments = () => {
             {previewFile && (
                 <div className="assignment-preview-modal-overlay" onClick={() => setPreviewFile(null)}>
                     <div className="assignment-preview-modal-content" onClick={(e) => e.stopPropagation()}>
-                        <div className="assignment-preview-header"><h3>File Preview</h3><button className="assignment-close-preview" onClick={() => setPreviewFile(null)}>×</button></div>
+                        <div className="assignment-preview-header">
+                            <h3>File Preview</h3>
+                            <button className="assignment-close-preview" onClick={() => setPreviewFile(null)}>×</button>
+                        </div>
                         <div className="assignment-preview-body">
-                            {previewType === 'image' && <img src={previewFile} alt="Preview" className="assignment-preview-image" />}
-                            {previewType === 'pdf' && <iframe src={previewFile} title="PDF Preview" className="assignment-preview-pdf" />}
+                            {previewType === 'image' && (
+                                <img src={previewFile} alt="Preview" className="assignment-preview-image" onError={(e) => {
+                                    e.target.style.display = 'none';
+                                    e.target.parentElement.innerHTML = '<div class="assignment-preview-placeholder"><div class="assignment-preview-icon">🖼️</div><p>Image preview not available</p><a href="' + previewFile + '" download class="assignment-download-file-btn">Download File</a></div>';
+                                }} />
+                            )}
+                            {previewType === 'pdf' && (
+                                <iframe src={`${previewFile}#toolbar=0`} title="PDF Preview" className="assignment-preview-pdf" />
+                            )}
                             {previewType !== 'image' && previewType !== 'pdf' && (
-                                <div className="assignment-preview-placeholder"><div className="assignment-preview-icon">📄</div><p>Preview not available.</p><a href={previewFile} download className="assignment-download-file-btn">Download File</a></div>
+                                <div className="assignment-preview-placeholder">
+                                    <div className="assignment-preview-icon">📄</div>
+                                    <p>Preview not available for this file type.</p>
+                                    <a href={previewFile} download className="assignment-download-file-btn">Download File</a>
+                                </div>
                             )}
                         </div>
                     </div>
