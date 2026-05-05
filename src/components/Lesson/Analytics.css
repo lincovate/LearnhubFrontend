@@ -630,3 +630,104 @@
         align-items: flex-start;
     }
 }
+/* Add these styles */
+
+.analysis-grade-cell {
+    position: relative;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    min-width: 100px;
+}
+
+.analysis-grade-bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    border-radius: var(--radius-sm);
+    opacity: 0.3;
+    transition: width 0.5s ease;
+}
+
+.analysis-grade-cell span {
+    position: relative;
+    z-index: 1;
+    padding-left: var(--spacing-sm);
+}
+
+.analysis-not-graded {
+    color: #ff9800;
+    font-style: italic;
+}
+
+.analysis-feedback-cell {
+    max-width: 200px;
+    word-wrap: break-word;
+}
+
+.analysis-submission-status {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.analysis-submission-status.submitted {
+    background: #e8f5e9;
+    color: #4caf50;
+}
+
+.analysis-submission-status.not-submitted {
+    background: #ffebee;
+    color: #f44336;
+}
+
+.analysis-attendance-status {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.analysis-attendance-status.present {
+    background: #e8f5e9;
+    color: #4caf50;
+}
+
+.analysis-attendance-status.absent {
+    background: #ffebee;
+    color: #f44336;
+}
+
+.analysis-attendance-status.late {
+    background: #fff3e0;
+    color: #ff9800;
+}
+
+.analysis-attendance-status.excused {
+    background: #e3f2fd;
+    color: #2196f3;
+}
+
+.analysis-assignments-table-section,
+.analysis-student-grades-table,
+.analysis-student-attendance-table,
+.analysis-detailed-attendance-table {
+    margin-top: var(--spacing-xl);
+}
+
+.analysis-assignments-table-section h4,
+.analysis-student-grades-table h4,
+.analysis-student-attendance-table h4,
+.analysis-detailed-attendance-table h4 {
+    margin-bottom: var(--spacing-md);
+    color: var(--gray-800);
+    font-size: 18px;
+}
+
+.analysis-personal-card {
+    margin-top: var(--spacing-xl);
+}

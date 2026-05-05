@@ -8,15 +8,17 @@ const Assignments = () => {
     const navigate = useNavigate();
     const { user, isTeacher, isStudent, loading: authLoading } = useAuth();
     const [assignments, setAssignments] = useState([]);
+    const [filteredAssignments, setFilteredAssignments] = useState([]);
     const [submissions, setSubmissions] = useState({});
     const [courses, setCourses] = useState([]);
+    const [selectedCourseFilter, setSelectedCourseFilter] = useState('');
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
     const [editingAssignment, setEditingAssignment] = useState(null);
     const [message, setMessage] = useState(null);
     const [previewFile, setPreviewFile] = useState(null);
     const [previewType, setPreviewType] = useState(null);
-    const [downloadingId, setDownloadingId] = useState(null); // Track which assignment is downloading
+    const [downloadingId, setDownloadingId] = useState(null);
     const [formData, setFormData] = useState({
         title: '',
         description: '',
@@ -105,13 +107,35 @@ const Assignments = () => {
         }
     }, [authLoading]);
     
+    // Filter assignments when course filter or assignments change
+    useEffect(() => {
+        if (isTeacher && selectedCourseFilter) {
+            const filtered = assignments.filter(assignment => 
+                assignment.course === parseInt(selectedCourseFilter)
+            );
+            setFilteredAssignments(filtered);
+        } else {
+            setFilteredAssignments(assignments);
+        }
+    }, [selectedCourseFilter, assignments, isTeacher]);
+    
     const fetchData = async () => {
         setLoading(true);
         try {
-            const [assignmentsRes, coursesRes] = await Promise.all([
-                api.getAssignments(),
-                api.getCourses()
-            ]);
+            let coursesRes;
+            let assignmentsRes;
+            
+            if (isTeacher) {
+                // For teachers: get their assigned courses
+                const myCoursesRes = await api.getMyCourses();
+                coursesRes = myCoursesRes;
+                assignmentsRes = await api.getAssignments();
+            } else {
+                // For students: get all courses (filtered by backend)
+                coursesRes = await api.getCourses();
+                assignmentsRes = await api.getAssignments();
+            }
+            
             setAssignments(assignmentsRes.data);
             setCourses(coursesRes.data);
             
@@ -292,6 +316,9 @@ const Assignments = () => {
         );
     }
     
+    // Get the list of assignments to display (filtered for teachers, all for students)
+    const displayAssignments = isTeacher ? filteredAssignments : assignments;
+    
     return (
         <div className="assignment-container">
             <div className="assignment-header">
@@ -309,6 +336,42 @@ const Assignments = () => {
                     </button>
                 )}
             </div>
+            
+            {/* Course Filter for Teachers */}
+            {isTeacher && courses.length > 0 && (
+                <div className="assignment-filter-section">
+                    <div className="assignment-filter-group">
+                        <label className="assignment-filter-label">Filter by Course:</label>
+                        <select 
+                            value={selectedCourseFilter} 
+                            onChange={(e) => setSelectedCourseFilter(e.target.value)}
+                            className="assignment-filter-select"
+                        >
+                            <option value="">All Courses</option>
+                            {courses.map(course => (
+                                <option key={course.id} value={course.id}>
+                                    {course.code} - {course.name}
+                                </option>
+                            ))}
+                        </select>
+                        {selectedCourseFilter && (
+                            <button 
+                                className="assignment-clear-filter"
+                                onClick={() => setSelectedCourseFilter('')}
+                            >
+                                Clear Filter
+                            </button>
+                        )}
+                    </div>
+                    <div className="assignment-filter-stats">
+                        {selectedCourseFilter ? (
+                            <span>Showing {displayAssignments.length} assignment(s) for selected course</span>
+                        ) : (
+                            <span>Total: {assignments.length} assignment(s)</span>
+                        )}
+                    </div>
+                </div>
+            )}
             
             {message && (
                 <div className={`assignment-message-banner assignment-message-${message.type}`}>
@@ -368,13 +431,14 @@ const Assignments = () => {
             )}
             
             <div className="assignment-grid">
-                {assignments.length === 0 ? (
+                {displayAssignments.length === 0 ? (
                     <div className="assignment-no-data">
                         <p>No assignments available.</p>
-                        {isTeacher && <p>Click "Create Assignment" to get started.</p>}
+                        {isTeacher && selectedCourseFilter && <p>No assignments found for this course. Try a different filter.</p>}
+                        {isTeacher && !selectedCourseFilter && <p>Click "Create Assignment" to get started.</p>}
                     </div>
                 ) : (
-                    assignments.map(assignment => {
+                    displayAssignments.map(assignment => {
                         const fileType = assignment.attachment ? getFileType(assignment.attachment) : null;
                         const fileUrl = getFileUrl(assignment.attachment);
                         return (

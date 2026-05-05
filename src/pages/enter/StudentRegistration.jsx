@@ -19,19 +19,26 @@ const StudentRegistration = () => {
     phone_number: '', address: ''
   });
 
-  const validatePhoneNumber = (number) => {
+  // Fixed: Validate that we have exactly 9 digits
+  const validatePhoneDigits = (digits) => {
     const phoneRegex = /^\d{9}$/;
-    return phoneRegex.test(number);
+    return phoneRegex.test(digits);
   };
 
   const handlePhoneChange = (e) => {
     const value = e.target.value.replace(/\D/g, '');
     if (value.length <= 9) {
       setPhoneDigits(value);
-      setFormData({ ...formData, phone_number: `+254${value}` });
-      if (value && !validatePhoneNumber(value)) {
-        setPhoneError('Please enter 9 digits (e.g., 712345678)');
-      } else {
+      
+      if (value.length === 9) {
+        // Format as +254XXXXXXXXX (9 digits after +254)
+        const fullPhoneNumber = `+254${value}`;
+        setFormData({ ...formData, phone_number: fullPhoneNumber });
+        setPhoneError('');
+      } else if (value.length > 0 && value.length < 9) {
+        setPhoneError(`Please enter ${9 - value.length} more digit(s)`);
+      } else if (value.length === 0) {
+        setFormData({ ...formData, phone_number: '' });
         setPhoneError('');
       }
     }
@@ -56,8 +63,9 @@ const StudentRegistration = () => {
       setError('Please enter a valid email address');
       return false;
     }
-    if (formData.phone_number && !validatePhoneNumber(phoneDigits)) {
-      setError('Please enter a valid 9-digit phone number');
+    // Only validate phone if provided and has 9 digits
+    if (formData.phone_number && !validatePhoneDigits(phoneDigits)) {
+      setError('Please enter a valid 9-digit phone number (e.g., 712345678)');
       return false;
     }
     if (!formData.registration_number.trim()) {
@@ -94,7 +102,19 @@ const StudentRegistration = () => {
     setError('');
     
     const submitData = { ...formData };
-    delete submitData.password2;
+    
+    
+    // Remove phone_number if it's empty string
+    if (!submitData.phone_number) {
+      delete submitData.phone_number;
+    }
+    
+    // Debug: Log what's being sent
+    console.log('Sending registration data:', {
+      ...submitData,
+      password: '***',
+      password2: '***'
+    });
     
     const result = await registerStudent(submitData);
     
@@ -103,9 +123,25 @@ const StudentRegistration = () => {
       sessionStorage.setItem('userEmail', formData.email);
       navigate('/student/enrollment');
     } else {
+      console.error('Registration error details:', result.error);
+      
       if (result.error) {
-        const errors = Object.values(result.error).flat();
-        setError(errors.join(', '));
+        // Handle Django REST framework error format
+        if (typeof result.error === 'object') {
+          const errorMessages = [];
+          Object.keys(result.error).forEach(key => {
+            if (Array.isArray(result.error[key])) {
+              errorMessages.push(`${key}: ${result.error[key].join(', ')}`);
+            } else {
+              errorMessages.push(`${key}: ${result.error[key]}`);
+            }
+          });
+          setError(errorMessages.join(' | '));
+        } else if (typeof result.error === 'string') {
+          setError(result.error);
+        } else {
+          setError('Registration failed. Please check your information.');
+        }
       } else {
         setError('Registration failed. Please try again.');
       }
@@ -141,7 +177,7 @@ const StudentRegistration = () => {
                 type="text" 
                 name="first_name" 
                 className="studentreg-input" 
-                placeholder="First Name *" 
+                placeholder="First Name" 
                 value={formData.first_name} 
                 onChange={handleChange} 
                 required 
@@ -153,7 +189,7 @@ const StudentRegistration = () => {
                 type="text" 
                 name="last_name" 
                 className="studentreg-input" 
-                placeholder="Last Name *" 
+                placeholder="Last Name" 
                 value={formData.last_name} 
                 onChange={handleChange} 
                 required 
@@ -167,7 +203,7 @@ const StudentRegistration = () => {
               type="email" 
               name="email" 
               className="studentreg-input" 
-              placeholder="Email Address *" 
+              placeholder="Email Address" 
               value={formData.email} 
               onChange={handleChange} 
               required 
@@ -175,7 +211,7 @@ const StudentRegistration = () => {
           </div>
           
           <div className="studentreg-form-group">
-            <label className="studentreg-label">Phone Number</label>
+            <label className="studentreg-label">Phone Number (Optional)</label>
             <div className="studentreg-phone-field">
               <div className="studentreg-phone-prefix">
                 <span className="studentreg-phone-prefix-text">+254</span>
@@ -193,7 +229,7 @@ const StudentRegistration = () => {
                 </div>
               )}
               <div className="studentreg-phone-hint">
-                <small>Enter 9 digits after +254 (e.g., 712345678)</small>
+                <small>Enter 9 digits (e.g., 712345678) - Must start with 7 or 1</small>
               </div>
             </div>
           </div>
@@ -204,7 +240,7 @@ const StudentRegistration = () => {
               type="text" 
               name="registration_number" 
               className="studentreg-input" 
-              placeholder="Registration Number *" 
+              placeholder="Registration Number" 
               value={formData.registration_number} 
               onChange={handleChange} 
               required 
@@ -217,7 +253,7 @@ const StudentRegistration = () => {
           </div>
           
           <div className="studentreg-form-group">
-            <label className="studentreg-label">School Name</label>
+            <label className="studentreg-label">School Name (Optional)</label>
             <textarea 
               name="address" 
               className="studentreg-textarea" 
@@ -234,7 +270,7 @@ const StudentRegistration = () => {
               type="text" 
               name="username" 
               className="studentreg-input" 
-              placeholder="Username *" 
+              placeholder="Username" 
               value={formData.username} 
               onChange={handleChange} 
               required 
@@ -248,7 +284,7 @@ const StudentRegistration = () => {
                 type={showPassword ? 'text' : 'password'}
                 name="password" 
                 className="studentreg-input" 
-                placeholder="Password *" 
+                placeholder="Password" 
                 value={formData.password} 
                 onChange={handleChange} 
                 required 
@@ -269,7 +305,7 @@ const StudentRegistration = () => {
               type="password" 
               name="password2" 
               className="studentreg-input" 
-              placeholder="Confirm Password *" 
+              placeholder="Confirm Password" 
               value={formData.password2} 
               onChange={handleChange} 
               required 

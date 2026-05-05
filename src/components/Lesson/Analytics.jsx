@@ -12,7 +12,6 @@ const Analytics = () => {
     const [loading, setLoading] = useState(true);
     const [activeAnalytic, setActiveAnalytic] = useState('grades');
     const [detailedAttendance, setDetailedAttendance] = useState([]);
-    const [showDetailedAttendance, setShowDetailedAttendance] = useState(false);
     
     const profileType = getProfileType();
     
@@ -23,14 +22,38 @@ const Analytics = () => {
     useEffect(() => {
         if (selectedCourse) {
             fetchAnalytics();
-            fetchDetailedAttendance();
+            if (activeAnalytic === 'attendance' && isTeacher) {
+                fetchDetailedAttendance();
+            }
         }
     }, [selectedCourse, activeAnalytic]);
     
     const fetchCourses = async () => {
+        setLoading(true);
         try {
-            const response = await api.getCourses();
-            setCourses(response.data);
+            if (isStudent) {
+                const enrollmentsRes = await api.getEnrollments();
+                const enrolledData = enrollmentsRes.data;
+                const coursesList = enrolledData.map(enrollment => ({
+                    id: enrollment.course,
+                    code: enrollment.course_code,
+                    name: enrollment.course_name,
+                    enrolled_at: enrollment.enrolled_at
+                }));
+                setCourses(coursesList);
+                if (coursesList.length > 0 && !selectedCourse) {
+                    setSelectedCourse(coursesList[0].id);
+                }
+            } else if (isTeacher) {
+                const myCoursesRes = await api.getMyCourses();
+                setCourses(myCoursesRes.data);
+                if (myCoursesRes.data.length > 0 && !selectedCourse) {
+                    setSelectedCourse(myCoursesRes.data[0].id);
+                }
+            } else {
+                const coursesRes = await api.getCourses();
+                setCourses(coursesRes.data);
+            }
         } catch (error) {
             console.error('Error fetching courses:', error);
         } finally {
@@ -99,8 +122,8 @@ const Analytics = () => {
         return '#f44336';
     };
     
-    // Download attendance as CSV
     const downloadAttendanceCSV = () => {
+        if (!isTeacher) return;
         if (!attendanceAnalytics || !attendanceAnalytics.student_summary) return;
         
         const headers = ['Registration No.', 'Student Name', 'Present', 'Absent', 'Late', 'Excused', 'Total Classes', 'Percentage', 'Letter Grade'];
@@ -114,7 +137,7 @@ const Analytics = () => {
             student.total_possible,
             `${student.percentage}%`,
             getLetterGrade(student.percentage)
-        ]);
+        ]); 
         
         const csvContent = [headers, ...rows].map(row => row.join(',')).join('\n');
         const blob = new Blob([csvContent], { type: 'text/csv' });
@@ -126,8 +149,8 @@ const Analytics = () => {
         URL.revokeObjectURL(url);
     };
     
-    // Download detailed attendance as CSV
     const downloadDetailedAttendanceCSV = () => {
+        if (!isTeacher) return;
         if (!detailedAttendance || detailedAttendance.length === 0) return;
         
         const headers = ['Student Name', 'Date', 'Time Slot', 'Status', 'Marked At', 'Remarks'];
@@ -155,8 +178,8 @@ const Analytics = () => {
         URL.revokeObjectURL(url);
     };
     
-    // Download grade analytics as CSV
     const downloadGradesCSV = () => {
+        if (!isTeacher) return;
         if (!gradeAnalytics) return;
         
         const headers = ['Assignment', 'Submissions', 'Graded', 'Average Grade (%)', 'Highest Grade', 'Lowest Grade'];
@@ -179,7 +202,6 @@ const Analytics = () => {
         URL.revokeObjectURL(url);
     };
     
-    // Print analytics
     const printAnalytics = () => {
         const printWindow = window.open('', '_blank');
         printWindow.document.write(`
@@ -210,28 +232,74 @@ const Analytics = () => {
         printWindow.print();
     };
     
+    if (!loading && courses.length === 0) {
+        return (
+            <div className="analysis-container">
+                <div className="analysis-header">
+                    <h2 className="analysis-title">📊 Performance Analytics</h2>
+                    <p className="analysis-subtitle">Comprehensive insights into student performance and engagement</p>
+                </div>
+                <div className="analysis-no-courses">
+                    <div className="analysis-no-courses-icon">📚</div>
+                    <h3>No Courses Available</h3>
+                    <p>
+                        {isStudent 
+                            ? "You are not enrolled in any courses yet. Please enroll in courses to view analytics."
+                            : isTeacher
+                            ? "You are not assigned to any courses yet. Contact an administrator to get course assignments."
+                            : "No courses available in the system."}
+                    </p>
+                    {isStudent && (
+                        <button 
+                            className="analysis-enroll-btn"
+                            onClick={() => window.location.href = '/student/enrollment'}
+                        >
+                            Enroll in Courses
+                        </button>
+                    )}
+                </div>
+            </div>
+        );
+    }
+    
     if (loading) return <div className="analysis-loading">Loading analytics...</div>;
     
     return (
         <div className="analysis-container">
             <div className="analysis-header">
                 <h2 className="analysis-title">📊 Performance Analytics</h2>
-                <p className="analysis-subtitle">Comprehensive insights into student performance and engagement</p>
+                <p className="analysis-subtitle">
+                    {isStudent 
+                        ? "Track your personal performance and attendance"
+                        : isTeacher
+                        ? "Monitor class performance and student engagement"
+                        : "Comprehensive insights into student performance and engagement"}
+                </p>
             </div>
             
             <div className="analysis-course-selector">
+                <label className="analysis-filter-label">Select Course:</label>
                 <select 
                     value={selectedCourse || ''} 
                     onChange={(e) => setSelectedCourse(e.target.value || null)}
                     className="analysis-course-select"
                 >
-                    <option value="">Select Course</option>
                     {courses.map(course => (
                         <option key={course.id} value={course.id}>
                             {course.code} - {course.name}
                         </option>
                     ))}
                 </select>
+                {isStudent && courses.length > 0 && (
+                    <div className="analysis-enrolled-info">
+                        📚 Enrolled in {courses.length} course{courses.length !== 1 ? 's' : ''}
+                    </div>
+                )}
+                {isTeacher && courses.length > 0 && (
+                    <div className="analysis-teaching-info">
+                        👨‍🏫 Teaching {courses.length} course{courses.length !== 1 ? 's' : ''}
+                    </div>
+                )}
             </div>
             
             {selectedCourse && (
@@ -252,7 +320,103 @@ const Analytics = () => {
                     </div>
                     
                     <div className="analysis-content">
-                        {activeAnalytic === 'grades' && gradeAnalytics && (
+                        {/* STUDENT GRADE ANALYTICS */}
+                        {activeAnalytic === 'grades' && gradeAnalytics && isStudent && (
+                            <div className="analysis-grade-section">
+                                <div className="analysis-section-header">
+                                    <div>
+                                        <h3 className="analysis-section-title">{gradeAnalytics.course_name}</h3>
+                                        <p className="analysis-section-code">{gradeAnalytics.course_code}</p>
+                                    </div>
+                                </div>
+                                
+                                <div className="analysis-personal-grade-summary">
+                                    <h4>Your Performance Summary</h4>
+                                    <div className="analysis-stats-grid">
+                                        <div className="analysis-stat-card">
+                                            <div className="analysis-stat-value">{gradeAnalytics.your_average || gradeAnalytics.student_average}%</div>
+                                            <div className="analysis-stat-label">Your Average Grade</div>
+                                            <div className="analysis-stat-grade">{getLetterGrade(gradeAnalytics.your_average || gradeAnalytics.student_average)}</div>
+                                        </div>
+                                        <div className="analysis-stat-card">
+                                            <div className="analysis-stat-value">{gradeAnalytics.class_average || gradeAnalytics.overall_average}%</div>
+                                            <div className="analysis-stat-label">Class Average</div>
+                                            <div className="analysis-stat-grade">{getLetterGrade(gradeAnalytics.class_average || gradeAnalytics.overall_average)}</div>
+                                        </div>
+                                        <div className="analysis-stat-card">
+                                            <div className="analysis-stat-value">{gradeAnalytics.your_rank || 'N/A'}</div>
+                                            <div className="analysis-stat-label">Your Rank</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div className="analysis-assignments-table-section">
+                                    <h4>Your Assignment Grades</h4>
+                                    <div className="analysis-table-wrapper">
+                                        <table className="analysis-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Assignment Title</th>
+                                                    <th>Due Date</th>
+                                                    <th>Submitted</th>
+                                                    <th>Grade (%)</th>
+                                                    <th>Letter Grade</th>
+                                                    <th>Feedback</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {gradeAnalytics.your_assignments?.map(assignment => {
+                                                    const dueDate = new Date(assignment.due_date);
+                                                    const formattedDueDate = dueDate.toLocaleDateString('en-US', {
+                                                        year: 'numeric',
+                                                        month: 'long',
+                                                        day: 'numeric'
+                                                    });
+                                                    
+                                                    return (
+                                                        <tr key={assignment.id}>
+                                                            <td><strong>{assignment.title}</strong></td>
+                                                            <td>{formattedDueDate}</td>
+                                                            <td>
+                                                                <span className={`analysis-submission-status ${assignment.submitted ? 'submitted' : 'not-submitted'}`}>
+                                                                    {assignment.submitted ? '✅ Yes' : '❌ No'}
+                                                                </span>
+                                                            </td>
+                                                            <td>
+                                                                {assignment.grade ? (
+                                                                    <div className="analysis-grade-cell">
+                                                                        <div 
+                                                                            className="analysis-grade-bar"
+                                                                            style={{width: `${assignment.grade}%`, background: getGradeColor(assignment.grade)}}
+                                                                        ></div>
+                                                                        <span>{assignment.grade}%</span>
+                                                                    </div>
+                                                                ) : (
+                                                                    <span className="analysis-not-graded">Not graded yet</span>
+                                                                )}
+                                                            </td>
+                                                            <td>
+                                                                {assignment.grade && (
+                                                                    <span className="analysis-grade-badge" style={{background: getGradeColor(assignment.grade)}}>
+                                                                        {getLetterGrade(assignment.grade)}
+                                                                    </span>
+                                                                )}
+                                                            </td>
+                                                            <td className="analysis-feedback-cell">
+                                                                {assignment.feedback || '-'}
+                                                            </td>
+                                                        </tr>
+                                                    );
+                                                })}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                        
+                        {/* TEACHER GRADE ANALYTICS */}
+                        {activeAnalytic === 'grades' && gradeAnalytics && isTeacher && (
                             <div className="analysis-grade-section">
                                 <div className="analysis-section-header">
                                     <div>
@@ -281,53 +445,210 @@ const Analytics = () => {
                                     </div>
                                 </div>
                                 
-                                <div className="analysis-assignments">
-                                    {gradeAnalytics.assignments?.map(assignment => {
-                                        const avgGrade = assignment.average_grade;
-                                        const gradeLetter = getLetterGrade(avgGrade);
-                                        const gradeColor = getGradeColor(avgGrade);
-                                        const circumference = 283;
-                                        const strokeDashoffset = circumference - (avgGrade / 100) * circumference;
-                                        
-                                        return (
-                                            <div key={assignment.assignment_id} className="analysis-assignment-card">
-                                                <div className="analysis-assignment-header">
-                                                    <div className="analysis-assignment-info">
-                                                        <h4 className="analysis-assignment-title">{assignment.title}</h4>
-                                                        <div className="analysis-assignment-stats">
-                                                            <span className="analysis-assignment-stat">📝 Submissions: {assignment.submissions_count}</span>
-                                                            <span className="analysis-assignment-stat">✅ Graded: {assignment.graded_count}</span>
-                                                            <span className="analysis-assignment-stat">⭐ Average: {assignment.average_grade}%</span>
-                                                        </div>
-                                                    </div>
-                                                    <div className="analysis-grade-circle">
-                                                        <svg className="analysis-circle-svg" viewBox="0 0 100 100">
-                                                            <circle cx="50" cy="50" r="45" fill="none" stroke="#e0e0e0" strokeWidth="8"/>
-                                                            <circle 
-                                                                cx="50" cy="50" r="45" fill="none" 
-                                                                stroke={gradeColor} 
-                                                                strokeWidth="8"
-                                                                strokeDasharray={circumference}
-                                                                strokeDashoffset={strokeDashoffset}
-                                                                strokeLinecap="round"
-                                                                transform="rotate(-90 50 50)"
-                                                                className="analysis-circle-progress"
-                                                            />
-                                                        </svg>
-                                                        <div className="analysis-circle-content">
-                                                            <span className="analysis-circle-percentage">{avgGrade}%</span>
-                                                            <span className="analysis-circle-grade" style={{background: gradeColor}}>{gradeLetter}</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
+                                <div className="analysis-assignments-table-section">
+                                    <h4>Assignments Summary</h4>
+                                    <div className="analysis-table-wrapper">
+                                        <table className="analysis-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Assignment</th>
+                                                    <th>Submissions</th>
+                                                    <th>Graded</th>
+                                                    <th>Average Grade</th>
+                                                    <th>Highest</th>
+                                                    <th>Lowest</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {gradeAnalytics.assignments?.map(assignment => (
+                                                    <tr key={assignment.assignment_id}>
+                                                        <td><strong>{assignment.title}</strong></td>
+                                                        <td>{assignment.submissions_count}</td>
+                                                        <td>{assignment.graded_count}</td>
+                                                        <td>
+                                                            <div className="analysis-grade-cell">
+                                                                <div 
+                                                                    className="analysis-grade-bar"
+                                                                    style={{width: `${assignment.average_grade}%`, background: getGradeColor(assignment.average_grade)}}
+                                                                ></div>
+                                                                <span>{assignment.average_grade}%</span>
+                                                            </div>
+                                                        </td>
+                                                        <td>{assignment.highest_grade}%</td>
+                                                        <td>{assignment.lowest_grade}%</td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                
+                                <div className="analysis-student-grades-table">
+                                    <h4>Student Grades Overview</h4>
+                                    <div className="analysis-table-wrapper">
+                                        <table className="analysis-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Registration No.</th>
+                                                    <th>Student Name</th>
+                                                    <th>Average Grade</th>
+                                                    <th>Letter Grade</th>
+                                                    <th>Assignments Completed</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {gradeAnalytics.student_grades?.map(student => (
+                                                    <tr key={student.student_id}>
+                                                        <td>{student.registration_number}</td>
+                                                        <td>{student.student_name}</td>
+                                                        <td>
+                                                            <div className="analysis-grade-cell">
+                                                                <div 
+                                                                    className="analysis-grade-bar"
+                                                                    style={{width: `${student.average_grade}%`, background: getGradeColor(student.average_grade)}}
+                                                                ></div>
+                                                                <span>{student.average_grade}%</span>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <span className="analysis-grade-badge" style={{background: getGradeColor(student.average_grade)}}>
+                                                                {getLetterGrade(student.average_grade)}
+                                                            </span>
+                                                        </td>
+                                                        <td>{student.completed_assignments || 0}/{gradeAnalytics.total_assignments}</td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         )}
                         
-                        {activeAnalytic === 'attendance' && attendanceAnalytics && (
+                        {/* STUDENT ATTENDANCE ANALYTICS - FIXED: Using session_summary instead of student_attendance_records */}
+                        {activeAnalytic === 'attendance' && attendanceAnalytics && isStudent && (
+                            <div className="analysis-attendance-section">
+                                <div className="analysis-section-header">
+                                    <h3 className="analysis-section-title">Your Attendance Summary</h3>
+                                </div>
+                                
+                                {attendanceAnalytics.student_summary
+                                    ?.filter(s => s.student_id === user?.id)
+                                    .map(student => (
+                                        <div key={student.student_id}>
+                                            <div className="analysis-stats-grid">
+                                                <div className="analysis-stat-card">
+                                                    <div className="analysis-stat-value">{student.present}</div>
+                                                    <div className="analysis-stat-label">Present</div>
+                                                </div>
+                                                <div className="analysis-stat-card">
+                                                    <div className="analysis-stat-value">{student.absent}</div>
+                                                    <div className="analysis-stat-label">Absent</div>
+                                                </div>
+                                                <div className="analysis-stat-card">
+                                                    <div className="analysis-stat-value">{student.late}</div>
+                                                    <div className="analysis-stat-label">Late</div>
+                                                </div>
+                                                <div className="analysis-stat-card">
+                                                    <div className="analysis-stat-value">{student.excused || 0}</div>
+                                                    <div className="analysis-stat-label">Excused</div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div className="analysis-personal-card">
+                                                <div className="analysis-personal-circle">
+                                                    <svg className="analysis-circle-svg" viewBox="0 0 100 100">
+                                                        <circle cx="50" cy="50" r="45" fill="none" stroke="#e0e0e0" strokeWidth="8"/>
+                                                        <circle 
+                                                            cx="50" cy="50" r="45" fill="none" 
+                                                            stroke={getAttendanceColor(student.percentage)} 
+                                                            strokeWidth="8"
+                                                            strokeDasharray={283}
+                                                            strokeDashoffset={283 - (student.percentage / 100) * 283}
+                                                            strokeLinecap="round"
+                                                            transform="rotate(-90 50 50)"
+                                                            className="analysis-circle-progress"
+                                                        />
+                                                    </svg>
+                                                    <div className="analysis-circle-content">
+                                                        <span className="analysis-circle-percentage">{student.percentage}%</span>
+                                                        <span className="analysis-circle-grade" style={{background: getAttendanceColor(student.percentage)}}>
+                                                            {getLetterGrade(student.percentage)}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div className="analysis-personal-details">
+                                                    <div className="analysis-personal-item">
+                                                        <span className="analysis-personal-label">Total Classes:</span>
+                                                        <span className="analysis-personal-value">{student.total_possible}</span>
+                                                    </div>
+                                                    <div className="analysis-personal-item">
+                                                        <span className="analysis-personal-label">Attendance Rate:</span>
+                                                        <span className="analysis-personal-value">{student.percentage}%</span>
+                                                    </div>
+                                                    <div className="analysis-personal-item">
+                                                        <span className="analysis-personal-label">Grade:</span>
+                                                        <span className="analysis-personal-value">{getLetterGrade(student.percentage)}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                
+                                {/* FIXED: Using session_summary from backend instead of student_attendance_records */}
+                                <div className="analysis-detailed-attendance-table">
+                                    <h4>Class Attendance Sessions</h4>
+                                    <div className="analysis-table-wrapper">
+                                        <table className="analysis-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Time Slot</th>
+                                                    <th>Total Students</th>
+                                                    <th>Present</th>
+                                                    <th>Absent</th>
+                                                    <th>Late</th>
+                                                    <th>Attendance Rate</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {attendanceAnalytics.session_summary?.map((session, index) => {
+                                                    const sessionDate = new Date(session.date);
+                                                    const formattedDate = sessionDate.toLocaleDateString('en-US', {
+                                                        year: 'numeric',
+                                                        month: 'long',
+                                                        day: 'numeric'
+                                                    });
+                                                    
+                                                    return (
+                                                        <tr key={index}>
+                                                            <td>{formattedDate}</td>
+                                                            <td>{session.time_slot}</td>
+                                                            <td>{session.total_students || session.present + session.absent + session.late}</td>
+                                                            <td>{session.present}</td>
+                                                            <td>{session.absent}</td>
+                                                            <td>{session.late}</td>
+                                                            <td>
+                                                                <div className="analysis-percentage-cell">
+                                                                    <div 
+                                                                        className="analysis-percentage-bar"
+                                                                        style={{width: `${session.attendance_rate}%`, background: getAttendanceColor(session.attendance_rate)}}
+                                                                    ></div>
+                                                                    <span className="analysis-percentage-text">{session.attendance_rate}%</span>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    );
+                                                })}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                        
+                        {/* TEACHER ATTENDANCE ANALYTICS */}
+                        {activeAnalytic === 'attendance' && attendanceAnalytics && isTeacher && (
                             <div className="analysis-attendance-section">
                                 <div className="analysis-section-header">
                                     <h3 className="analysis-section-title">Attendance Summary</h3>
@@ -356,168 +677,119 @@ const Analytics = () => {
                                     </div>
                                 </div>
                                 
-                                {isTeacher && (
-                                    <>
-                                        <div className="analysis-section-header-small">
-                                            <h4>Student Attendance Summary</h4>
-                                            <button 
-                                                className="analysis-toggle-detail"
-                                                onClick={() => setShowDetailedAttendance(!showDetailedAttendance)}
-                                            >
-                                                {showDetailedAttendance ? 'Hide Detailed View' : 'Show Detailed View'}
-                                            </button>
-                                        </div>
-                                        
-                                        <div className="analysis-table-wrapper">
-                                            <table className="analysis-table">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Registration No.</th>
-                                                        <th>Student Name</th>
-                                                        <th>Present</th>
-                                                        <th>Absent</th>
-                                                        <th>Late</th>
-                                                        <th>Excused</th>
-                                                        <th>Total</th>
-                                                        <th>Percentage</th>
-                                                        <th>Grade</th>
+                                <div className="analysis-student-attendance-table">
+                                    <h4>Student Attendance Summary</h4>
+                                    <div className="analysis-table-wrapper">
+                                        <table className="analysis-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Registration No.</th>
+                                                    <th>Student Name</th>
+                                                    <th>Present</th>
+                                                    <th>Absent</th>
+                                                    <th>Late</th>
+                                                    <th>Excused</th>
+                                                    <th>Total</th>
+                                                    <th>Percentage</th>
+                                                    <th>Grade</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {attendanceAnalytics.student_summary?.map(student => (
+                                                    <tr key={student.student_id}>
+                                                        <td>{student.registration_number}</td>
+                                                        <td>{student.student_name}</td>
+                                                        <td>{student.present}</td>
+                                                        <td>{student.absent}</td>
+                                                        <td>{student.late}</td>
+                                                        <td>{student.excused || 0}</td>
+                                                        <td>{student.total_possible}</td>
+                                                        
+                                                        <tr>
+                                                            <div className="analysis-percentage-cell">
+                                                                <div 
+                                                                    className="analysis-percentage-bar"
+                                                                    style={{width: `${student.percentage}%`, background: getAttendanceColor(student.percentage)}}
+                                                                ></div>
+                                                                <span className="analysis-percentage-text">{student.percentage}%</span>
+                                                            </div>
+                                                        </tr>
+                                                        <td>
+                                                            <span className="analysis-grade-badge" style={{background: getAttendanceColor(student.percentage)}}>
+                                                                {getLetterGrade(student.percentage)}
+                                                            </span>
+                                                        </td>
                                                     </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {attendanceAnalytics.student_summary?.map(student => (
-                                                        <tr key={student.student_id}>
-                                                            <td>{student.registration_number}</td>
-                                                            <td>{student.student_name}</td>
-                                                            <td>{student.present}</td>
-                                                            <td>{student.absent}</td>
-                                                            <td>{student.late}</td>
-                                                            <td>{student.excused || 0}</td>
-                                                            <td>{student.total_possible}</td>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                
+                                <div className="analysis-detailed-attendance-table">
+                                    <h4>Session-wise Attendance</h4>
+                                    <div className="analysis-table-wrapper">
+                                        <table className="analysis-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Time Slot</th>
+                                                    <th>Total Students</th>
+                                                    <th>Present</th>
+                                                    <th>Absent</th>
+                                                    <th>Late</th>
+                                                    <th>Rate</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {attendanceAnalytics.session_summary?.map((session, index) => {
+                                                    const sessionDate = new Date(session.date);
+                                                    const formattedDate = sessionDate.toLocaleDateString('en-US', {
+                                                        year: 'numeric',
+                                                        month: 'long',
+                                                        day: 'numeric'
+                                                    });
+                                                    
+                                                    return (
+                                                        <tr key={index}>
+                                                            <td>{formattedDate}</td>
+                                                            <td>{session.time_slot}</td>
+                                                            <td>{session.total_students || session.present + session.absent + session.late}</td>
+                                                            <td>{session.present}</td>
+                                                            <td>{session.absent}</td>
+                                                            <td>{session.late}</td>
                                                             <td>
                                                                 <div className="analysis-percentage-cell">
                                                                     <div 
                                                                         className="analysis-percentage-bar"
-                                                                        style={{width: `${student.percentage}%`, background: getAttendanceColor(student.percentage)}}
+                                                                        style={{width: `${session.attendance_rate}%`, background: getAttendanceColor(session.attendance_rate)}}
                                                                     ></div>
-                                                                    <span className="analysis-percentage-text">{student.percentage}%</span>
+                                                                    <span className="analysis-percentage-text">{session.attendance_rate}%</span>
                                                                 </div>
                                                             </td>
-                                                            <td>
-                                                                <span className="analysis-grade-badge" style={{background: getAttendanceColor(student.percentage)}}>
-                                                                    {getLetterGrade(student.percentage)}
-                                                                </span>
-                                                            </td>
                                                         </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        
-                                        {showDetailedAttendance && (
-                                            <div className="analysis-detailed-attendance">
-                                                <h4>Detailed Attendance Records</h4>
-                                                <div className="analysis-session-grid">
-                                                    {attendanceAnalytics.session_summary?.map(session => (
-                                                        <div key={session.date} className="analysis-session-card">
-                                                            <div className="analysis-session-header">
-                                                                <span className="analysis-session-date">{new Date(session.date).toLocaleDateString()}</span>
-                                                                <span className="analysis-session-time">{session.time_slot}</span>
-                                                                <span className={`analysis-session-status ${session.is_active ? 'active' : 'closed'}`}>
-                                                                    {session.is_active ? '🟢 Active' : '🔴 Closed'}
-                                                                </span>
-                                                            </div>
-                                                            <div className="analysis-session-stats">
-                                                                <div className="analysis-session-stat">Present: <strong>{session.present}</strong></div>
-                                                                <div className="analysis-session-stat">Absent: <strong>{session.absent}</strong></div>
-                                                                <div className="analysis-session-stat">Late: <strong>{session.late}</strong></div>
-                                                                <div className="analysis-session-stat">Rate: <strong>{session.attendance_rate}%</strong></div>
-                                                            </div>
-                                                        </div>
-                                                    ))}
-                                                </div>
+                                                    );
+                                                })}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                
+                                <div className="analysis-daily-trend">
+                                    <h4>Daily Attendance Trend</h4>
+                                    <div className="analysis-trend-chart">
+                                        {attendanceAnalytics.session_summary?.map(session => (
+                                            <div key={session.date} className="analysis-trend-bar">
+                                                <div 
+                                                    className="analysis-trend-bar-fill" 
+                                                    style={{height: `${session.attendance_rate * 2}px`, background: getAttendanceColor(session.attendance_rate)}}
+                                                ></div>
+                                                <div className="analysis-trend-label">{new Date(session.date).toLocaleDateString()}</div>
+                                                <div className="analysis-trend-value">{session.attendance_rate}%</div>
                                             </div>
-                                        )}
-                                    </>
-                                )}
-                                
-                                {isStudent && (
-                                    <div className="analysis-personal-stats">
-                                        <h4>Your Attendance Summary</h4>
-                                        {attendanceAnalytics.student_summary
-                                            ?.filter(s => s.student_id === user?.id)
-                                            .map(student => {
-                                                const circumference = 283;
-                                                const strokeDashoffset = circumference - (student.percentage / 100) * circumference;
-                                                const attendanceColor = getAttendanceColor(student.percentage);
-                                                
-                                                return (
-                                                    <div key={student.student_id} className="analysis-personal-card">
-                                                        <div className="analysis-personal-circle">
-                                                            <svg className="analysis-circle-svg" viewBox="0 0 100 100">
-                                                                <circle cx="50" cy="50" r="45" fill="none" stroke="#e0e0e0" strokeWidth="8"/>
-                                                                <circle 
-                                                                    cx="50" cy="50" r="45" fill="none" 
-                                                                    stroke={attendanceColor} 
-                                                                    strokeWidth="8"
-                                                                    strokeDasharray={circumference}
-                                                                    strokeDashoffset={strokeDashoffset}
-                                                                    strokeLinecap="round"
-                                                                    transform="rotate(-90 50 50)"
-                                                                    className="analysis-circle-progress"
-                                                                />
-                                                            </svg>
-                                                            <div className="analysis-circle-content">
-                                                                <span className="analysis-circle-percentage">{student.percentage}%</span>
-                                                                <span className="analysis-circle-grade" style={{background: attendanceColor}}>
-                                                                    {getLetterGrade(student.percentage)}
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                        <div className="analysis-personal-details">
-                                                            <div className="analysis-personal-item">
-                                                                <span className="analysis-personal-label">Present:</span>
-                                                                <span className="analysis-personal-value">{student.present}</span>
-                                                            </div>
-                                                            <div className="analysis-personal-item">
-                                                                <span className="analysis-personal-label">Absent:</span>
-                                                                <span className="analysis-personal-value">{student.absent}</span>
-                                                            </div>
-                                                            <div className="analysis-personal-item">
-                                                                <span className="analysis-personal-label">Late:</span>
-                                                                <span className="analysis-personal-value">{student.late}</span>
-                                                            </div>
-                                                            <div className="analysis-personal-item">
-                                                                <span className="analysis-personal-label">Excused:</span>
-                                                                <span className="analysis-personal-value">{student.excused || 0}</span>
-                                                            </div>
-                                                            <div className="analysis-personal-item">
-                                                                <span className="analysis-personal-label">Total Classes:</span>
-                                                                <span className="analysis-personal-value">{student.total_possible}</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                );
-                                            })}
+                                        ))}
                                     </div>
-                                )}
-                                
-                                {isTeacher && (
-                                    <div className="analysis-daily-trend">
-                                        <h4>Daily Attendance Trend</h4>
-                                        <div className="analysis-trend-chart">
-                                            {attendanceAnalytics.session_summary?.map(session => (
-                                                <div key={session.date} className="analysis-trend-bar">
-                                                    <div 
-                                                        className="analysis-trend-bar-fill" 
-                                                        style={{height: `${session.attendance_rate * 2}px`, background: getAttendanceColor(session.attendance_rate)}}
-                                                    ></div>
-                                                    <div className="analysis-trend-label">{new Date(session.date).toLocaleDateString()}</div>
-                                                    <div className="analysis-trend-value">{session.attendance_rate}%</div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
+                                </div>
                             </div>
                         )}
                     </div>

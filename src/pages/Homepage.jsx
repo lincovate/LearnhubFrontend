@@ -9,7 +9,7 @@ import './Homepage.css';
 
 const Homepage = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, getProfileType, isAuthenticated } = useAuth(); // Add getProfileType
   const featuresRef = useRef(null);
   const statsRef = useRef(null);
   const carouselRef = useRef(null);
@@ -48,6 +48,16 @@ const Homepage = () => {
       cta: "Join Now"
     }
   ];
+
+  // Handle dashboard click - same as Navbar
+  const handleDashboardClick = () => {
+    const profileType = getProfileType();
+    if (profileType === 'student') {
+      navigate('/student/announcements');
+    } else if (profileType === 'teacher') {
+      navigate('/teacher/announcements');
+    }
+  };
 
   // Animation function for counters
   const animateNumber = (start, end, duration, setter) => {
@@ -152,7 +162,7 @@ const Homepage = () => {
               <h1 className="homepage-carousel-title animate-slide-up">{slide.title}</h1>
               <p className="homepage-carousel-subtitle animate-slide-up">{slide.subtitle}</p>
               <div className="homepage-carousel-buttons animate-slide-up">
-                {!user ? (
+                {!isAuthenticated ? (
                   <>
                     <button onClick={() => navigate('/register')} className="homepage-btn homepage-btn-secondary homepage-btn-lg">
                       Get Started
@@ -162,13 +172,13 @@ const Homepage = () => {
                     </button>
                   </>
                 ) : (
-                  <button onClick={() => {
-                    const profileType = localStorage.getItem('profile_type');
-                    navigate(`/${profileType}/dashboard`);
-                  }} className="homepage-btn homepage-btn-secondary homepage-btn-lg">
+                  <button 
+                    onClick={handleDashboardClick} 
+                    className="homepage-btn homepage-btn-secondary homepage-btn-lg"
+                  >
                     Go to Dashboard
                   </button>
-                )}
+                )}  
               </div>
             </div>
           </div>

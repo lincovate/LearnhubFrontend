@@ -7,6 +7,7 @@ const QnA = () => {
     const { user, isTeacher, isStudent, loading: authLoading, profileType } = useAuth();
     const [questions, setQuestions] = useState([]);
     const [courses, setCourses] = useState([]);
+    const [enrolledCourses, setEnrolledCourses] = useState([]); // New: Store enrolled courses for students
     const [selectedCourse, setSelectedCourse] = useState(null);
     const [loading, setLoading] = useState(true);
     const [showQuestionForm, setShowQuestionForm] = useState(false);
@@ -26,21 +27,73 @@ const QnA = () => {
     
     useEffect(() => {
         if (!authLoading) {
-            fetchData();
+            fetchCourses();
+            fetchQuestions();
         }
     }, [selectedCourse, authLoading]);
     
-    const fetchData = async () => {
+    // Fetch courses based on user role
+    const fetchCourses = async () => {
+        try {
+            if (isStudent) {
+                // Get student's enrolled courses
+                const enrollmentsRes = await api.getEnrollments();
+                const enrolledCoursesData = enrollmentsRes.data;
+                setEnrolledCourses(enrolledCoursesData);
+                
+                // Extract course details from enrollments
+                const coursesList = enrolledCoursesData.map(enrollment => ({
+                    id: enrollment.course,
+                    code: enrollment.course_code,
+                    name: enrollment.course_name
+                }));
+                setCourses(coursesList);
+                
+                // Auto-select first enrolled course if none selected
+                if (!selectedCourse && coursesList.length > 0) {
+                    setSelectedCourse(coursesList[0].id);
+                }
+            } else if (isTeacher) {
+                // Get teacher's assigned courses
+                const myCoursesRes = await api.getMyCourses();
+                setCourses(myCoursesRes.data);
+            } else {
+                // For admin or other roles
+                const coursesRes = await api.getCourses();
+                setCourses(coursesRes.data);
+            }
+        } catch (error) {
+            console.error('Error fetching courses:', error);
+        }
+    };
+    
+    const fetchQuestions = async () => {
         setLoading(true);
         try {
-            const [coursesRes, questionsRes] = await Promise.all([
-                api.getCourses(),
-                selectedCourse ? api.getQuestionsByCourse(selectedCourse) : api.getQuestions()
-            ]);
-            setCourses(coursesRes.data);
+            let questionsRes;
+            
+            if (selectedCourse) {
+                // Fetch questions for specific course
+                questionsRes = await api.getQuestionsByCourse(selectedCourse);
+            } else if (isStudent && enrolledCourses.length > 0) {
+                // For students with no course selected, fetch questions from all enrolled courses
+                const courseIds = enrolledCourses.map(c => c.course);
+                const allQuestions = [];
+                for (const courseId of courseIds) {
+                    const res = await api.getQuestionsByCourse(courseId);
+                    allQuestions.push(...res.data);
+                }
+                // Sort by date (newest first)
+                allQuestions.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+                questionsRes = { data: allQuestions };
+            } else {
+                // For teachers or when no filter
+                questionsRes = await api.getQuestions();
+            }
+            
             setQuestions(questionsRes.data);
         } catch (error) {
-            console.error('Error fetching data:', error);
+            console.error('Error fetching questions:', error);
         } finally {
             setLoading(false);
         }
@@ -65,7 +118,10 @@ const QnA = () => {
             await api.createQuestion(dataToSend);
             setShowQuestionForm(false);
             setQuestionForm({ title: '', content: '', course: '', tags: '' });
-            fetchData();
+            
+            // Auto-select the course the question was posted to
+            setSelectedCourse(parseInt(questionForm.course, 10));
+            fetchQuestions();
             alert('Question posted successfully!');
         } catch (error) {
             console.error('Error posting question:', error);
@@ -83,7 +139,7 @@ const QnA = () => {
             await api.answerQuestion(questionId, answerForm.content);
             setShowAnswerForm(null);
             setAnswerForm({ content: '' });
-            fetchData();
+            fetchQuestions();
             alert('Answer posted successfully!');
         } catch (error) {
             console.error('Error posting answer:', error);
@@ -94,7 +150,7 @@ const QnA = () => {
     const handleAcceptAnswer = async (answerId) => {
         try {
             await api.acceptAnswer(answerId);
-            fetchData();
+            fetchQuestions();
             alert('Answer accepted successfully!');
         } catch (error) {
             console.error('Error accepting answer:', error);
@@ -117,7 +173,7 @@ const QnA = () => {
                 await api.upvoteAnswer(answerId);
                 setUserVotes(prev => ({ ...prev, [answerId]: 'upvote' }));
             }
-            fetchData();
+            fetchQuestions();
         } catch (error) {
             console.error('Error upvoting answer:', error);
             alert(error.response?.data?.error || 'Failed to upvote answer');
@@ -139,7 +195,7 @@ const QnA = () => {
                 await api.downvoteAnswer(answerId);
                 setUserVotes(prev => ({ ...prev, [answerId]: 'downvote' }));
             }
-            fetchData();
+            fetchQuestions();
         } catch (error) {
             console.error('Error downvoting answer:', error);
             alert(error.response?.data?.error || 'Failed to downvote answer');
@@ -160,27 +216,41 @@ const QnA = () => {
             <div className="qna-header">
                 <div>
                     <h2>💬 Questions & Answers</h2>
-                    <p className="qna-subtitle">Get help from your instructors and peers</p>
+                    <p className="qna-subtitle">
+                        {isStudent 
+                            ? `Showing questions from your enrolled courses (${courses.length} course${courses.length !== 1 ? 's' : ''})`
+                            : 'Get help from your instructors and peers'}
+                    </p>
                 </div>
                 <button className="qna-ask-btn" onClick={() => setShowQuestionForm(!showQuestionForm)}>
                     {showQuestionForm ? 'Cancel' : '+ Ask a Question'}
                 </button>
             </div>
             
-            <div className="qna-course-filter">
-                <select 
-                    value={selectedCourse || ''} 
-                    onChange={(e) => setSelectedCourse(e.target.value || null)}
-                    className="qna-course-select"
-                >
-                    <option value="">All Courses</option>
-                    {courses.map(course => (
-                        <option key={course.id} value={course.id}>
-                            {course.code} - {course.name}
-                        </option>
-                    ))}
-                </select>
-            </div>
+            {courses.length > 0 && (
+                <div className="qna-course-filter">
+                    <label className="qna-filter-label">Filter by Course:</label>
+                    <select 
+                        value={selectedCourse || ''} 
+                        onChange={(e) => setSelectedCourse(e.target.value || null)}
+                        className="qna-course-select"
+                    >
+                        <option value="">All My Courses</option>
+                        {courses.map(course => (
+                            <option key={course.id} value={course.id}>
+                                {course.code || course.course_code} - {course.name || course.course_name}
+                            </option>
+                        ))}
+                    </select>
+                    
+                    {/* Show currently enrolled courses count for students */}
+                    {isStudent && (
+                        <div className="qna-enrolled-info">
+                            📚 Enrolled in {courses.length} course{courses.length !== 1 ? 's' : ''}
+                        </div>
+                    )}
+                </div>
+            )}
             
             {showQuestionForm && (
                 <form className="qna-question-form" onSubmit={handleAskQuestion}>
@@ -221,10 +291,15 @@ const QnA = () => {
                             <option value="">Select Course</option>
                             {courses.map(course => (
                                 <option key={course.id} value={course.id}>
-                                    {course.code} - {course.name}
+                                    {course.code || course.course_code} - {course.name || course.course_name}
                                 </option>
                             ))}
                         </select>
+                        {isStudent && (
+                            <small className="qna-form-hint">
+                                You can only ask questions about courses you're enrolled in
+                            </small>
+                        )}
                     </div>
                     
                     <div className="qna-form-group">
@@ -249,8 +324,17 @@ const QnA = () => {
             <div className="qna-questions-list">
                 {questions.length === 0 ? (
                     <div className="qna-no-questions">
-                        <p>No questions yet.</p>
-                        <p>Be the first to ask a question!</p>
+                        {selectedCourse ? (
+                            <>
+                                <p>No questions yet for this course.</p>
+                                <p>Be the first to ask a question!</p>
+                            </>
+                        ) : (
+                            <>
+                                <p>No questions found in your courses.</p>
+                                <p>Start by asking a question about one of your courses!</p>
+                            </>
+                        )}
                     </div>
                 ) : (
                     questions.map(question => (
