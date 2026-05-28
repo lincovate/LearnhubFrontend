@@ -6,7 +6,7 @@ import Assignments from '../components/Lesson/Assignments';
 import Attendance from '../components/Lesson/Attendance';
 import Announcements from '../components/Lesson/Announcements';
 import QnA from '../components/Lesson/QnA';
-import StudentExams from './Exams/StudentExams';
+import StudentExams from './exams/StudentExams';
 import TakeExam from './exams/TakeExam';
 import ExamResult from './exams/ExamResult';
 import Analytics from '../components/Lesson/Analytics';
