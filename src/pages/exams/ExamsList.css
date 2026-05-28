@@ -1,0 +1,164 @@
+/* ExamsList.css */
+.exams-list {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Header */
+.exams-list__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.exams-list__title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  color: #1e293b;
+  border-left: 4px solid #3b82f6;
+  padding-left: 1rem;
+}
+
+.exams-list__btn-create {
+  background-color: #10b981;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 40px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s;
+  display: inline-block;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+.exams-list__btn-create:hover {
+  background-color: #059669;
+  transform: translateY(-1px);
+}
+
+/* Grid layout */
+.exams-list__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Card */
+.exams-list__card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.exams-list__card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+  border-color: #cbd5e1;
+}
+
+.exams-list__card-title {
+  margin: 0 0 0.75rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.exams-list__card-course {
+  font-weight: 500;
+  color: #2563eb;
+  margin-bottom: 0.5rem;
+}
+
+.exams-list__card-marks,
+.exams-list__card-time,
+.exams-list__card-date {
+  margin: 0.3rem 0;
+  color: #475569;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* Actions buttons */
+.exams-list__actions {
+  margin-top: 1.2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.exams-list__actions a,
+.exams-list__actions button {
+  padding: 0.4rem 0.9rem;
+  border-radius: 40px;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.exams-list__btn-view { background-color: #3b82f6; color: white; }
+.exams-list__btn-view:hover { background-color: #2563eb; }
+
+.exams-list__btn-edit { background-color: #f59e0b; color: white; }
+.exams-list__btn-edit:hover { background-color: #d97706; }
+
+.exams-list__btn-delete { background-color: #ef4444; color: white; }
+.exams-list__btn-delete:hover { background-color: #dc2626; }
+
+.exams-list__btn-rank { background-color: #8b5cf6; color: white; }
+.exams-list__btn-rank:hover { background-color: #7c3aed; }
+
+.exams-list__btn-take { background-color: #10b981; color: white; }
+.exams-list__btn-take:hover { background-color: #059669; }
+
+.exams-list__btn-result { background-color: #64748b; color: white; }
+.exams-list__btn-result:hover { background-color: #475569; }
+
+/* Loading, error, empty states */
+.exams-list--loading,
+.exams-list--error,
+.exams-list__empty {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1rem;
+  color: #64748b;
+  background: #f8fafc;
+  border-radius: 16px;
+}
+
+.exams-list--error {
+  color: #b91c1c;
+  background: #fee2e2;
+  border-left: 4px solid #ef4444;
+  text-align: left;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .exams-list {
+    padding: 1rem;
+  }
+  .exams-list__header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .exams-list__btn-create {
+    text-align: center;
+  }
+  .exams-list__grid {
+    grid-template-columns: 1fr;
+  }
+  .exams-list__title {
+    font-size: 1.5rem;
+  }
+}

@@ -1,0 +1,299 @@
+/* StudentExams.css - Modern & Responsive */
+
+.student-exams {
+  padding: 1rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Header */
+.student-exams-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.student-exams-header h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin: 0;
+  color: #1e293b;
+}
+
+.refresh-btn {
+  background-color: #10b981;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.refresh-btn:hover {
+  background-color: #059669;
+  transform: translateY(-1px);
+}
+
+/* Tabs */
+.student-exams .tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.student-exams .tab-btn {
+  background: none;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 40px;
+  transition: all 0.2s;
+  color: #64748b;
+}
+
+.student-exams .tab-btn:hover {
+  background-color: #f1f5f9;
+  color: #1e293b;
+}
+
+.student-exams .tab-btn.active {
+  background-color: #3b82f6;
+  color: white;
+  box-shadow: 0 2px 4px rgba(59,130,246,0.2);
+}
+
+.student-exams .tab-content {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Exam Cards (grid layout) */
+.student-exams .exams-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.student-exams .exam-item {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 1.25rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.student-exams .exam-item:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+  border-color: #cbd5e1;
+}
+
+.student-exams .exam-info h3 {
+  margin: 0 0 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.student-exams .exam-info p {
+  margin: 0.4rem 0;
+  font-size: 0.9rem;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.student-exams .exam-info p:first-of-type {
+  font-weight: 500;
+  color: #2563eb;
+}
+
+/* Exam actions buttons */
+.student-exams .exam-actions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.student-exams .exam-actions button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.85rem;
+}
+
+.student-exams .btn-take {
+  background-color: #10b981;
+  color: white;
+}
+.student-exams .btn-take:hover {
+  background-color: #059669;
+  transform: translateY(-1px);
+}
+
+.student-exams .btn-result {
+  background-color: #3b82f6;
+  color: white;
+}
+.student-exams .btn-result:hover {
+  background-color: #2563eb;
+  transform: translateY(-1px);
+}
+
+.student-exams .btn-continue {
+  background-color: #f59e0b;
+  color: white;
+}
+.student-exams .btn-continue:hover {
+  background-color: #d97706;
+  transform: translateY(-1px);
+}
+
+/* Timer display */
+.student-exams .timer-display {
+  font-weight: 700;
+  color: #dc2626;
+  background: #fee2e2;
+  padding: 0.2rem 0.5rem;
+  border-radius: 20px;
+  font-family: monospace;
+  font-size: 1rem;
+  display: inline-block;
+}
+
+/* Empty message */
+.student-exams .empty-message {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #64748b;
+  padding: 3rem;
+  background: #f8fafc;
+  border-radius: 16px;
+  font-size: 1rem;
+}
+
+/* Error banner */
+.error-banner {
+  background-color: #fee2e2;
+  border-left: 4px solid #ef4444;
+  color: #b91c1c;
+  padding: 1rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.error-banner button {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* No exams card (fallback) – kept for rare cases */
+.no-exams-card {
+  background: #f8fafc;
+  border-radius: 16px;
+  padding: 2rem;
+  text-align: center;
+  margin-top: 1rem;
+  border: 1px solid #e2e8f0;
+}
+
+.possible-reasons {
+  margin: 1rem auto;
+  font-size: 0.9rem;
+  color: #475569;
+  text-align: left;
+  max-width: 400px;
+}
+
+.possible-reasons ul {
+  margin-top: 0.5rem;
+  padding-left: 1.2rem;
+}
+
+.hint {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  margin-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 0.75rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .student-exams {
+    padding: 0.75rem;
+  }
+  .student-exams .tabs {
+    gap: 0.3rem;
+  }
+  .student-exams .tab-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+  }
+  .student-exams .exams-list {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .student-exams .exam-info h3 {
+    font-size: 1.1rem;
+  }
+  .student-exams .exam-actions {
+    justify-content: stretch;
+  }
+  .student-exams .exam-actions button {
+    flex: 1;
+    text-align: center;
+  }
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+  .student-exams-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .refresh-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .error-banner {
+    flex-direction: column;
+    text-align: center;
+  }
+}

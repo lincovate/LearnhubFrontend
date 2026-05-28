@@ -78,6 +78,7 @@ export const api = {
   // Courses
   getCourses: () => apiClient.get('/courses/'),
   getCourseStudents: (courseId) => apiClient.get(`/courses/${courseId}/students/`),
+   getMyCourses: () => apiClient.get('/my-courses/'),
   
   // Enrollments
   getEnrollments: () => apiClient.get('/enrollments/'),
@@ -273,6 +274,6 @@ openDownloadInNewTab: (fileUrl) => {
   // Teacher's courses
   getMyCourses: () => apiClient.get('/my-courses/'),
  
-};
+}; 
 
 export default apiClient;

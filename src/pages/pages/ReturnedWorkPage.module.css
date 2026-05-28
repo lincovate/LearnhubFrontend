@@ -1,0 +1,13 @@
+/* src/pages/pages/ReturnedWorkPage.module.css */
+.returnedWorkPage {
+    background: var(--gray-100, #f5f5f5);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* The ReturnedWorkList component will handle its own styling */
+/* This ensures proper spacing within the dashboard */
+.returnedWorkPage > div {
+    margin: 0;
+    padding: 0;
+}

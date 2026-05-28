@@ -1,0 +1,130 @@
+/* ExamResult.css */
+.exam-result {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+}
+
+.exam-result__title {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #1e293b;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 0.75rem;
+}
+
+.exam-result__card {
+  background: #f8fafc;
+  border-radius: 20px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.exam-result__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+.exam-result__row:last-child {
+  border-bottom: none;
+}
+
+.exam-result__label {
+  font-weight: 600;
+  color: #475569;
+  min-width: 120px;
+  font-size: 0.95rem;
+}
+
+.exam-result__value {
+  font-weight: 500;
+  color: #0f172a;
+  text-align: right;
+  word-break: break-word;
+}
+
+/* Status badges */
+.exam-result__status {
+  display: inline-block;
+  padding: 0.2rem 0.8rem;
+  border-radius: 40px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.exam-result__status--passed {
+  background-color: #d1fae5;
+  color: #10b981;
+}
+.exam-result__status--failed {
+  background-color: #fee2e2;
+  color: #ef4444;
+}
+
+/* Back button */
+.exam-result__back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  background-color: #3b82f6;
+  color: white;
+  padding: 0.6rem 1.5rem;
+  border-radius: 40px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  margin: 0 auto;
+  width: fit-content;
+}
+.exam-result__back-btn:hover {
+  background-color: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Loading and empty states */
+.exam-result--loading,
+.exam-result--empty {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1rem;
+  color: #64748b;
+  background: #f8fafc;
+  border-radius: 24px;
+  max-width: 600px;
+  margin: 2rem auto;
+}
+
+/* Responsive design */
+@media (max-width: 640px) {
+  .exam-result {
+    margin: 1rem;
+    padding: 1rem;
+  }
+  .exam-result__row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+  .exam-result__value {
+    text-align: left;
+  }
+  .exam-result__label {
+    min-width: auto;
+  }
+  .exam-result__title {
+    font-size: 1.5rem;
+  }
+  .exam-result__card {
+    padding: 1rem;
+  }
+}

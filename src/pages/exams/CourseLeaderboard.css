@@ -1,0 +1,110 @@
+/* CourseLeaderboard.css */
+.course-leaderboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.course-leaderboard__title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #1e293b;
+  border-left: 4px solid #3b82f6;
+  padding-left: 1rem;
+}
+
+.course-leaderboard__select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  margin: 1rem 0 1.5rem;
+  font-size: 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  background-color: #f8fafc;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.course-leaderboard__select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59,130,246,0.2);
+}
+
+.course-leaderboard__loading {
+  text-align: center;
+  color: #64748b;
+  padding: 2rem;
+}
+
+.course-leaderboard__subtitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 1.5rem 0 1rem;
+  color: #0f172a;
+}
+
+.course-leaderboard__table-wrapper {
+  overflow-x: auto;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+}
+
+.course-leaderboard__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.course-leaderboard__th,
+.course-leaderboard__td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.course-leaderboard__th {
+  background-color: #f8fafc;
+  font-weight: 600;
+  color: #1e293b;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.course-leaderboard__tr:hover .course-leaderboard__td {
+  background-color: #f1f5f9;
+}
+
+/* Rank column styling */
+.course-leaderboard__td:first-child {
+  font-weight: 700;
+  color: #3b82f6;
+}
+
+/* Loading state */
+.course-leaderboard--loading {
+  text-align: center;
+  padding: 3rem;
+  color: #64748b;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .course-leaderboard {
+    padding: 1rem;
+    margin: 1rem;
+  }
+  .course-leaderboard__title {
+    font-size: 1.5rem;
+  }
+  .course-leaderboard__subtitle {
+    font-size: 1.2rem;
+  }
+  .course-leaderboard__th,
+  .course-leaderboard__td {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+}

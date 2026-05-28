@@ -1,0 +1,206 @@
+/* EssayGrading.css */
+.essay-grading {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Header */
+.essay-grading__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.essay-grading__title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+  color: #1e293b;
+  background: linear-gradient(135deg, #1e293b, #3b82f6);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.essay-grading__back-btn {
+  background-color: #64748b;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 40px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.essay-grading__back-btn:hover {
+  background-color: #475569;
+  transform: translateY(-1px);
+}
+
+/* List of essay cards */
+.essay-grading__list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Card */
+.essay-grading__card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 1.5rem;
+  transition: all 0.2s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+.essay-grading__card:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border-color: #cbd5e1;
+}
+
+/* Student info */
+.essay-grading__student-info {
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  color: #475569;
+}
+
+/* Question and answer */
+.essay-grading__question {
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #0f172a;
+  font-size: 1.05rem;
+}
+
+.essay-grading__answer {
+  background: #f8fafc;
+  padding: 1rem;
+  border-radius: 12px;
+  margin: 0.5rem 0 1rem;
+  border-left: 4px solid #3b82f6;
+}
+.essay-grading__answer p {
+  margin: 0;
+  color: #334155;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Grading area */
+.essay-grading__grade-area {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.essay-grading__label {
+  font-weight: 600;
+  color: #475569;
+}
+
+.essay-grading__input {
+  width: 100px;
+  padding: 0.5rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 40px;
+  font-size: 0.9rem;
+  text-align: center;
+  transition: border 0.2s;
+}
+.essay-grading__input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59,130,246,0.2);
+}
+
+/* Status messages */
+.essay-grading__status {
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.25rem 0.6rem;
+  border-radius: 20px;
+}
+.essay-grading__status--saving {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+.essay-grading__status--saved {
+  background-color: #d1fae5;
+  color: #10b981;
+}
+
+/* Empty states */
+.essay-grading__empty-message,
+.essay-grading--loading,
+.essay-grading--error,
+.essay-grading--empty {
+  text-align: center;
+  padding: 3rem;
+  background: #f8fafc;
+  border-radius: 24px;
+  color: #64748b;
+}
+.essay-grading--error {
+  color: #b91c1c;
+  background: #fee2e2;
+  border-left: 4px solid #ef4444;
+  text-align: left;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .essay-grading {
+    padding: 1rem;
+  }
+  .essay-grading__header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .essay-grading__title {
+    font-size: 1.4rem;
+    text-align: center;
+  }
+  .essay-grading__back-btn {
+    width: 100%;
+    text-align: center;
+  }
+  .essay-grading__card {
+    padding: 1rem;
+  }
+  .essay-grading__grade-area {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .essay-grading__input {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .essay-grading__student-info {
+    font-size: 0.8rem;
+  }
+  .essay-grading__question {
+    font-size: 0.95rem;
+  }
+  .essay-grading__answer {
+    padding: 0.75rem;
+  }
+}

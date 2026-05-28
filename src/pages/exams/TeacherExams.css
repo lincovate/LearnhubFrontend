@@ -1,0 +1,225 @@
+/* TeacherExams.css - Modern & Responsive */
+
+.teacher-exams {
+  padding: 1rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Header actions */
+.teacher-exams .header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.teacher-exams .header-actions h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin: 0;
+  color: #1e293b;
+}
+
+.teacher-exams .actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.teacher-exams .actions button {
+  padding: 0.6rem 1.25rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.teacher-exams .btn-create {
+  background-color: #10b981;
+  color: white;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+.teacher-exams .btn-create:hover:not(:disabled) {
+  background-color: #059669;
+  transform: translateY(-1px);
+}
+
+.teacher-exams .btn-leaderboard {
+  background-color: #8b5cf6;
+  color: white;
+}
+.teacher-exams .btn-leaderboard:hover {
+  background-color: #7c3aed;
+  transform: translateY(-1px);
+}
+
+/* Table styling */
+.teacher-exams .exams-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.teacher-exams .exams-table th {
+  background-color: #f8fafc;
+  color: #1e293b;
+  font-weight: 600;
+  padding: 1rem;
+  border-bottom: 2px solid #e2e8f0;
+  text-align: left;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+}
+
+.teacher-exams .exams-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  vertical-align: middle;
+  color: #334155;
+}
+
+.teacher-exams .exams-table tr:last-child td {
+  border-bottom: none;
+}
+
+.teacher-exams .exams-table tr:hover td {
+  background-color: #f1f5f9;
+}
+
+/* Actions cell buttons */
+.teacher-exams .actions-cell {
+  white-space: nowrap;
+}
+
+.teacher-exams .actions-cell button {
+  margin-right: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.teacher-exams .btn-edit {
+  background-color: #f59e0b;
+  color: white;
+}
+.teacher-exams .btn-edit:hover {
+  background-color: #d97706;
+  transform: translateY(-1px);
+}
+
+.teacher-exams .btn-rank {
+  background-color: #3b82f6;
+  color: white;
+}
+.teacher-exams .btn-rank:hover {
+  background-color: #2563eb;
+  transform: translateY(-1px);
+}
+
+.teacher-exams .btn-grade {
+  background-color: #ec489a;
+  color: white;
+}
+.teacher-exams .btn-grade:hover {
+  background-color: #db2777;
+  transform: translateY(-1px);
+}
+
+.teacher-exams .btn-delete {
+  background-color: #ef4444;
+  color: white;
+}
+.teacher-exams .btn-delete:hover {
+  background-color: #dc2626;
+  transform: translateY(-1px);
+}
+
+/* Warning banner */
+.teacher-exams .warning-banner {
+  background-color: #fef3c7;
+  border-left: 4px solid #f59e0b;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: 8px;
+  color: #92400e;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.teacher-exams .error-banner {
+  background-color: #fee2e2;
+  border-left: 4px solid #ef4444;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: 8px;
+  color: #b91c1c;
+}
+
+/* Disabled button */
+.teacher-exams .btn-create:disabled {
+  background-color: #cbd5e1;
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+}
+
+/* Empty state */
+.teacher-exams > p {
+  text-align: center;
+  padding: 2rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+/* Responsive table – horizontal scroll on small screens */
+@media (max-width: 768px) {
+  .teacher-exams .header-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .teacher-exams .actions {
+    justify-content: flex-start;
+  }
+  .teacher-exams .exams-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .teacher-exams .exams-table th,
+  .teacher-exams .exams-table td {
+    padding: 0.75rem;
+  }
+  .teacher-exams .actions-cell button {
+    margin: 0.2rem;
+  }
+}
+
+/* For very small screens, stack buttons vertically inside cell */
+@media (max-width: 480px) {
+  .teacher-exams .actions-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .teacher-exams .actions-cell button {
+    width: 100%;
+    text-align: center;
+    margin: 0;
+  }
+}

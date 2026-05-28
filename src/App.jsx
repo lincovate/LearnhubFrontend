@@ -19,6 +19,10 @@ import Pricing from './pages/Pricing';
 import Contact from './pages/Contact';
 import TeacherRegistration from './pages/enter/TeacherRegistration';
 import Profile from './pages/Profile';
+import ChatPage from './pages/pages/ChatPage';
+import ReferencePage from './pages/pages/ReferencePage';
+import ReturnedWorkPage from './pages/pages/ReturnedWorkPage';
+import EssayGrading from './pages/exams/EssayGrading';
 
 function App() {
   return (
@@ -27,24 +31,9 @@ function App() {
         position="top-right" 
         toastOptions={{ 
           duration: 4000,
-          style: {
-            background: '#363636',
-            color: '#fff',
-          },
-          success: {
-            duration: 3000,
-            iconTheme: {
-              primary: '#4caf50',
-              secondary: '#fff',
-            },
-          },
-          error: {
-            duration: 4000,
-            iconTheme: {
-              primary: '#f44336',
-              secondary: '#fff',
-            },
-          },
+          style: { background: '#363636', color: '#fff' },
+          success: { duration: 3000, iconTheme: { primary: '#4caf50', secondary: '#fff' } },
+          error: { duration: 4000, iconTheme: { primary: '#f44336', secondary: '#fff' } }
         }} 
       />
       <AuthProvider>
@@ -54,7 +43,7 @@ function App() {
             <Routes>
               {/* Public Routes */}
               <Route path="/" element={<Homepage />} />
-               <Route path="/More" element={<More />} />
+              <Route path="/More" element={<More />} />
               <Route path="/About" element={<About />} />
               <Route path="/Pricing" element={<Pricing />} />
               <Route path="/login" element={<Login />} />
@@ -68,8 +57,6 @@ function App() {
               <Route path="/student/*" element={
                 <PrivateRoute requiredRole="student">
                   <StudentDashboard />
-
-
                 </PrivateRoute>
               } />
               
@@ -80,28 +67,15 @@ function App() {
                 </PrivateRoute>
               } />
               
-              {/* Grading View - Specific route for grading with assignment ID */}
-              <Route path="/teacher/grading/:assignmentId" element={
-                <PrivateRoute requiredRole="teacher">
-                  <GradingView />
-                </PrivateRoute>
-              } />
-              
-              {/* Profile Route - Both Student and Teacher */}
-              <Route path="/profile" element={
-                <PrivateRoute>
-                  <Profile />
-                </PrivateRoute>
-              } />
-
-               <Route path="/student/enrollment" element={
-                <PrivateRoute requiredRole="student">
-                  <CourseEnrollment />
-                </PrivateRoute>
-              } />
-
-              
-              {/* Catch all - redirect to home */}
+              {/* Standalone routes (not inside dashboards) */}
+              <Route path="/chat" element={<PrivateRoute><ChatPage /></PrivateRoute>} />
+              <Route path="/reference" element={<PrivateRoute><ReferencePage /></PrivateRoute>} />
+              <Route path="/returned-work" element={<PrivateRoute><ReturnedWorkPage /></PrivateRoute>} />
+              <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+              <Route path="/student/enrollment" element={<PrivateRoute requiredRole="student"><CourseEnrollment /></PrivateRoute>} />
+              <Route path="/teacher/grading/:assignmentId" element={<PrivateRoute requiredRole="teacher"><GradingView /></PrivateRoute>} />
+              <Route path="/teacher/exams/:examId/grade-essays" element={<PrivateRoute requiredRole="teacher"><EssayGrading /></PrivateRoute>} />
+              {/* Catch all */}
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </div>

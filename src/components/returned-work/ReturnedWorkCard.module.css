@@ -1,0 +1,202 @@
+/* src/components/returned-work/ReturnedWorkCard.module.css */
+.returnedWorkCard {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  transition: all 0.2s;
+  border: 1px solid #e5e7eb;
+  margin-bottom: 16px;
+}
+
+.returnedWorkCard:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.returnedWorkCard_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.returnedWorkCard_titleSection {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.returnedWorkCard_title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.returnedWorkCard_newBadge {
+  background: #3b82f6;
+  color: white;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+.returnedWorkCard_date {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.returnedWorkCard_content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.returnedWorkCard_info {
+  flex: 1;
+}
+
+.returnedWorkCard_infoRow {
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.returnedWorkCard_label {
+  font-weight: 500;
+  color: #6b7280;
+  margin-right: 8px;
+}
+
+.returnedWorkCard_value {
+  color: #1f2937;
+}
+
+.returnedWorkCard_gradeSection {
+  text-align: center;
+  min-width: 80px;
+}
+
+.returnedWorkCard_grade {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.returnedWorkCard_grade_excellent {
+  color: #10b981;
+}
+
+.returnedWorkCard_grade_good {
+  color: #3b82f6;
+}
+
+.returnedWorkCard_grade_average {
+  color: #f59e0b;
+}
+
+.returnedWorkCard_grade_pass {
+  color: #8b5cf6;
+}
+
+.returnedWorkCard_grade_fail {
+  color: #ef4444;
+}
+
+.returnedWorkCard_gradeLabel {
+  font-size: 11px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.returnedWorkCard_feedbackSection {
+  margin-bottom: 16px;
+  border-top: 1px solid #f3f4f6;
+  padding-top: 12px;
+}
+
+.returnedWorkCard_feedbackToggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #3b82f6;
+  padding: 4px 0;
+  transition: color 0.2s;
+}
+
+.returnedWorkCard_feedbackToggle:hover {
+  color: #2563eb;
+}
+
+.returnedWorkCard_feedbackIcon {
+  width: 18px;
+  height: 18px;
+}
+
+.returnedWorkCard_feedbackContent {
+  margin-top: 12px;
+  padding: 12px;
+  background: #f9fafb;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.returnedWorkCard_actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.returnedWorkCard_downloadBtn,
+.returnedWorkCard_viewBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.returnedWorkCard_downloadBtn {
+  background: #3b82f6;
+  color: white;
+}
+
+.returnedWorkCard_downloadBtn:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.returnedWorkCard_downloadBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.returnedWorkCard_viewBtn {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.returnedWorkCard_viewBtn:hover {
+  background: #e5e7eb;
+}
+
+.returnedWorkCard_icon {
+  width: 16px;
+  height: 16px;
+}

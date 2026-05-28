@@ -1,0 +1,125 @@
+/* CreateExam.css */
+.create-exam {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.create-exam__title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #1e293b;
+  border-left: 4px solid #3b82f6;
+  padding-left: 1rem;
+}
+
+.create-exam__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.create-exam__form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.create-exam__label {
+  font-weight: 600;
+  color: #334155;
+  font-size: 0.9rem;
+}
+
+.create-exam__input,
+.create-exam__select,
+.create-exam__textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.2s;
+  background-color: #f8fafc;
+}
+.create-exam__input:focus,
+.create-exam__select:focus,
+.create-exam__textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+}
+
+.create-exam__textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.create-exam__form-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.create-exam__form-row .create-exam__form-group {
+  flex: 1;
+}
+
+.create-exam__checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+.create-exam__checkbox-group input {
+  width: auto;
+}
+
+.create-exam__error {
+  background-color: #fee2e2;
+  border-left: 4px solid #ef4444;
+  color: #b91c1c;
+  padding: 0.75rem;
+  border-radius: 12px;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.create-exam__submit {
+  background-color: #10b981;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 40px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 1rem;
+}
+.create-exam__submit:hover:not(:disabled) {
+  background-color: #059669;
+  transform: translateY(-1px);
+}
+.create-exam__submit:disabled {
+  background-color: #cbd5e1;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .create-exam {
+    margin: 1rem;
+    padding: 1rem;
+  }
+  .create-exam__title {
+    font-size: 1.5rem;
+  }
+  .create-exam__form-row {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}

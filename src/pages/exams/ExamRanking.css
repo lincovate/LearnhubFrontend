@@ -1,0 +1,157 @@
+/* ExamRanking.css */
+.exam-ranking {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Title and participants */
+.exam-ranking__title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #1e293b;
+  border-left: 4px solid #3b82f6;
+  padding-left: 1rem;
+}
+
+.exam-ranking__participants {
+  color: #64748b;
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+}
+
+.exam-ranking__subtitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 1.5rem 0 1rem;
+  color: #0f172a;
+}
+
+/* Table wrapper for horizontal scroll on small screens */
+.exam-ranking__table-wrapper {
+  overflow-x: auto;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  margin: 1rem 0;
+}
+
+.exam-ranking__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.exam-ranking__th,
+.exam-ranking__td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.exam-ranking__th {
+  background-color: #f8fafc;
+  font-weight: 600;
+  color: #1e293b;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.exam-ranking__tr:hover .exam-ranking__td {
+  background-color: #f1f5f9;
+}
+
+/* First column (rank) styling */
+.exam-ranking__td:first-child {
+  font-weight: 700;
+  color: #3b82f6;
+}
+
+/* My rank card */
+.exam-ranking__my-rank {
+  background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+  border-radius: 20px;
+  padding: 1.2rem;
+  margin: 1.5rem 0;
+  border-left: 4px solid #0284c7;
+}
+.exam-ranking__my-rank-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0 0 0.3rem;
+  color: #0c4a6e;
+}
+.exam-ranking__my-rank-score {
+  margin: 0;
+  color: #0369a1;
+  font-weight: 500;
+}
+
+/* Back button */
+.exam-ranking__back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 40px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 1.5rem;
+}
+.exam-ranking__back-btn:hover {
+  background-color: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Loading, error, empty states */
+.exam-ranking--loading,
+.exam-ranking--error,
+.exam-ranking--empty {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1rem;
+  background: #f8fafc;
+  border-radius: 24px;
+  max-width: 800px;
+  margin: 2rem auto;
+  color: #64748b;
+}
+.exam-ranking--error {
+  color: #b91c1c;
+  background: #fee2e2;
+  border-left: 4px solid #ef4444;
+  text-align: left;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .exam-ranking {
+    padding: 1rem;
+    margin: 1rem;
+  }
+  .exam-ranking__title {
+    font-size: 1.5rem;
+  }
+  .exam-ranking__subtitle {
+    font-size: 1.3rem;
+  }
+  .exam-ranking__th,
+  .exam-ranking__td {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+  .exam-ranking__my-rank {
+    padding: 1rem;
+  }
+  .exam-ranking__my-rank-title {
+    font-size: 1rem;
+  }
+}
