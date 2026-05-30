@@ -1,0 +1,103 @@
+.AnswerSheet-container {
+  min-height: 100vh;
+}
+
+.AnswerSheet-card {
+  max-width: 900px;
+  margin: 2rem auto;
+}
+
+.AnswerSheet-title {
+  color: var(--primary);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.AnswerSheet-info {
+  background: var(--bg-light);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.dark .AnswerSheet-info {
+  background: var(--card-dark);
+}
+
+.AnswerSheet-subtitle {
+  margin: 1.5rem 0 1rem;
+  color: var(--secondary);
+}
+
+.AnswerSheet-questionCard {
+  background: var(--card-light);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-left: 4px solid;
+}
+
+.dark .AnswerSheet-questionCard {
+  background: var(--card-dark);
+}
+
+.AnswerSheet-questionCard.correct {
+  border-left-color: #22c55e;
+}
+
+.AnswerSheet-questionCard.incorrect {
+  border-left-color: #ef4444;
+}
+
+.AnswerSheet-questionHeader {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.AnswerSheet-questionNumber {
+  font-weight: bold;
+  color: var(--primary);
+}
+
+.AnswerSheet-questionText {
+  flex: 1;
+}
+
+.AnswerSheet-marks {
+  font-size: 0.85rem;
+  color: var(--text-light);
+}
+
+.dark .AnswerSheet-marks {
+  color: var(--text-dark);
+}
+
+.AnswerSheet-answerRow {
+  padding-left: 1rem;
+  font-size: 0.9rem;
+}
+
+.AnswerSheet-studentAnswer,
+.AnswerSheet-correctAnswer,
+.AnswerSheet-marksAwarded {
+  margin: 0.25rem 0;
+}
+
+.text-correct {
+  color: #22c55e;
+}
+
+.text-incorrect {
+  color: #ef4444;
+}
+
+.AnswerSheet-correctAnswer {
+  color: var(--secondary);
+}
+
+.AnswerSheet-backBtn {
+  width: 100%;
+  margin-top: 1rem;
+}

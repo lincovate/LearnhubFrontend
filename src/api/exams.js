@@ -46,6 +46,7 @@ saveAnswer: (examId, questionId, answerData) =>
     const url = examId ? `/results/?exam=${examId}` : '/results/';
     return apiClient.get(url);
   },
+  getAnswerSheet: (attemptId) => apiClient.get(`attempts/${attemptId}/answer-sheet/`),
   getStudentAnswers: (attemptId = null) => {
     const url = attemptId ? `/answers/?attempt=${attemptId}` : '/answers/';
     return apiClient.get(url);

@@ -32,10 +32,11 @@ const EssayGrading = ({ examId: propExamId }) => {
       ]);
       setExam(examRes.data);
 
+      // All answers from the API (may be paginated)
       const allAnswers = answersRes.data.results || answersRes.data || [];
+      // Filter using the new fields from the serializer
       const filtered = allAnswers.filter(ans => {
-        const question = ans.question;
-        return question?.exam === parseInt(examId) && question?.question_type === 'ESS';
+        return ans.question_exam_id === parseInt(examId) && ans.question_type === 'ESS';
       });
       setEssayAnswers(filtered);
     } catch (err) {
@@ -59,6 +60,7 @@ const EssayGrading = ({ examId: propExamId }) => {
     setGradingStatus(prev => ({ ...prev, [answerId]: 'saving' }));
     try {
       await examsApi.gradeEssay(answerId, marks);
+      // Update local state
       setEssayAnswers(prev =>
         prev.map(ans =>
           ans.id === answerId ? { ...ans, marks_awarded: marks } : ans

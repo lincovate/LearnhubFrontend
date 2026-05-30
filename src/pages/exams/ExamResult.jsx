@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { examsApi } from '../../api/exams';
 import './ExamResult.css';
 
 const ExamResult = ({ id }) => {
+  const navigate = useNavigate();  // ✅ import and use
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -56,6 +57,12 @@ const ExamResult = ({ id }) => {
           <span className="exam-result__label">Submitted:</span>
           <span className="exam-result__value">{new Date(result.end_time).toLocaleString()}</span>
         </div>
+        <button 
+          onClick={() => navigate(`/answer-sheet/${result.id}`)}  // ✅ use result.id
+          className="btn-secondary"
+        >
+          View Answer Sheet
+        </button>
       </div>
       <Link to="/student/exams" className="exam-result__back-btn">← Back to Exams</Link>
     </div>

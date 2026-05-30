@@ -7,57 +7,59 @@ const TakeExam = ({ id }) => {
   const navigate = useNavigate();
   const [examData, setExamData] = useState(null);
   const [answers, setAnswers] = useState({});
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [timeLeft, setTimeLeft] = useState({ minutes: 0, seconds: 0 });
   const [submitting, setSubmitting] = useState(false);
   const [warning, setWarning] = useState('');
   const [isBlurred, setIsBlurred] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
-  const [modalType, setModalType] = useState('confirm'); // 'confirm' or 'info'
+  const [modalType, setModalType] = useState('confirm');
   const [resolveModal, setResolveModal] = useState(null);
   const blurCount = useRef(0);
   const intervalRef = useRef(null);
-  const questionRefs = useRef([]);
   const submittedRef = useRef(false);
+  const [choiceMap, setChoiceMap] = useState({});
 
-  // --- Anti-cheat handlers (unchanged) ---
+  // --- REF to always have latest answers ---
+  const answersRef = useRef(answers);
+  useEffect(() => {
+    answersRef.current = answers;
+  }, [answers]);
+
+  // --- Anti-cheat handlers (unchanged, same as before) ---
   const preventCopy = (e) => {
     e.preventDefault();
     setWarning('Copying is not allowed during the exam.');
     setTimeout(() => setWarning(''), 1500);
     return false;
   };
-
   const preventPaste = (e) => {
     e.preventDefault();
     setWarning('Pasting is not allowed during the exam.');
     setTimeout(() => setWarning(''), 1500);
     return false;
   };
-
   const preventCut = (e) => {
     e.preventDefault();
     setWarning('Cutting is not allowed during the exam.');
     setTimeout(() => setWarning(''), 1500);
     return false;
   };
-
   const preventContextMenu = (e) => {
     e.preventDefault();
     setWarning('Right-click is disabled during the exam.');
     setTimeout(() => setWarning(''), 1500);
     return false;
   };
-
   const preventSelection = (e) => {
     e.preventDefault();
     return false;
   };
-
   const preventKeyShortcuts = (e) => {
     if (
-      (e.ctrlKey && (e.key === 'c' || e.key === 'C' || e.key === 'v' || e.key === 'V' || 
-                     e.key === 'x' || e.key === 'X' || e.key === 'p' || e.key === 'P' || 
+      (e.ctrlKey && (e.key === 'c' || e.key === 'C' || e.key === 'v' || e.key === 'V' ||
+                     e.key === 'x' || e.key === 'X' || e.key === 'p' || e.key === 'P' ||
                      e.key === 's' || e.key === 'S')) ||
       e.key === 'F12' ||
       (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j')) ||
@@ -69,7 +71,6 @@ const TakeExam = ({ id }) => {
       return false;
     }
   };
-
   const handleVisibilityChange = () => {
     if (document.hidden) {
       blurCount.current++;
@@ -80,18 +81,15 @@ const TakeExam = ({ id }) => {
       setWarning('');
     }
   };
-
   const handleWindowBlur = () => {
     blurCount.current++;
     setIsBlurred(true);
     setWarning(`Warning: You left the exam window (${blurCount.current}). Continuing may be considered cheating.`);
   };
-
   const handleWindowFocus = () => {
     setIsBlurred(false);
     setWarning('');
   };
-
   const preventScreenshotKeys = (e) => {
     if (e.key === 'PrintScreen' || (e.ctrlKey && e.key === 'PrintScreen') || (e.altKey && e.key === 'PrintScreen')) {
       e.preventDefault();
@@ -107,7 +105,6 @@ const TakeExam = ({ id }) => {
       return false;
     }
   };
-
   useEffect(() => {
     document.addEventListener('contextmenu', preventContextMenu);
     document.addEventListener('copy', preventCopy);
@@ -121,7 +118,6 @@ const TakeExam = ({ id }) => {
     window.addEventListener('focus', handleWindowFocus);
     document.addEventListener('dragstart', preventCopy);
     document.addEventListener('drop', preventPaste);
-
     return () => {
       document.removeEventListener('contextmenu', preventContextMenu);
       document.removeEventListener('copy', preventCopy);
@@ -147,7 +143,6 @@ const TakeExam = ({ id }) => {
       setResolveModal(() => resolve);
     });
   };
-
   const closeModal = (confirmed = false) => {
     setModalVisible(false);
     if (resolveModal) {
@@ -156,7 +151,23 @@ const TakeExam = ({ id }) => {
     }
   };
 
-  // --- Exam logic ---
+  // --- Build TF choice map when exam data loads ---
+  useEffect(() => {
+    if (examData && examData.questions) {
+      const map = {};
+      examData.questions.forEach(q => {
+        if (q.question_type === 'TF' && q.choices) {
+          const trueChoice = q.choices.find(c => c.text.toLowerCase() === 'true');
+          const falseChoice = q.choices.find(c => c.text.toLowerCase() === 'false');
+          if (trueChoice) map[`${q.id}_true`] = trueChoice.id;
+          if (falseChoice) map[`${q.id}_false`] = falseChoice.id;
+        }
+      });
+      setChoiceMap(map);
+    }
+  }, [examData]);
+
+  // --- Load or start exam ---
   useEffect(() => {
     const stored = localStorage.getItem(`exam_${id}`);
     if (stored) {
@@ -174,6 +185,7 @@ const TakeExam = ({ id }) => {
     }
   }, [id]);
 
+  // --- Timer and auto-submit (using answersRef for latest answers) ---
   useEffect(() => {
     if (examData && !submittedRef.current) {
       intervalRef.current = setInterval(() => {
@@ -181,9 +193,13 @@ const TakeExam = ({ id }) => {
         setTimeLeft(remaining);
         if (remaining.expired && !submittedRef.current) {
           clearInterval(intervalRef.current);
-          // Show time expiry modal first, then auto-submit (or submit and then show modal)
+          const latestAnswers = answersRef.current;
           showModal(" Oh no! Your time is up.  Cross your fingers and pray you pass! 😢", "info")
-            .then(() => handleSubmit(true));
+            .then(() => {
+              if (!submittedRef.current) {
+                handleSubmit(true, latestAnswers);
+              }
+            });
         }
       }, 1000);
       return () => clearInterval(intervalRef.current);
@@ -215,8 +231,9 @@ const TakeExam = ({ id }) => {
     }
   };
 
-  const handleSubmit = async (auto = false) => {
+  const handleSubmit = async (auto = false, answersToSubmit = null) => {
     if (submitting || submittedRef.current) return;
+    const submitAnswers = answersToSubmit !== null ? answersToSubmit : answers;
     if (!auto) {
       const confirmed = await showModal('Are you sure you want to submit your exam?', 'confirm');
       if (!confirmed) return;
@@ -224,7 +241,7 @@ const TakeExam = ({ id }) => {
     setSubmitting(true);
     submittedRef.current = true;
     try {
-      await examsApi.submitExam(id, answers);
+      await examsApi.submitExam(id, submitAnswers);
       examsApi.clearProgress(examData.attempt_id);
       localStorage.removeItem(`exam_${id}`);
       navigate(`/student/exams/result/${id}`);
@@ -235,10 +252,21 @@ const TakeExam = ({ id }) => {
     }
   };
 
-  const scrollToQuestion = (index) => {
-    const element = questionRefs.current[index];
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const goToQuestion = (index) => {
+    if (index >= 0 && index < examData.questions.length) {
+      setCurrentIndex(index);
+    }
+  };
+
+  const nextQuestion = () => {
+    if (currentIndex + 1 < examData.questions.length) {
+      setCurrentIndex(currentIndex + 1);
+    }
+  };
+
+  const prevQuestion = () => {
+    if (currentIndex - 1 >= 0) {
+      setCurrentIndex(currentIndex - 1);
     }
   };
 
@@ -252,6 +280,9 @@ const TakeExam = ({ id }) => {
   };
 
   if (!examData) return <div className="take-exam-container">Loading exam...</div>;
+
+  const currentQ = examData.questions[currentIndex];
+  const totalQuestions = examData.questions.length;
 
   return (
     <div className="take-exam-container">
@@ -281,7 +312,7 @@ const TakeExam = ({ id }) => {
                 <button
                   key={q.id}
                   className={`question-nav-btn ${isQuestionAnswered(q.id) ? 'answered' : 'unanswered'}`}
-                  onClick={() => scrollToQuestion(idx)}
+                  onClick={() => goToQuestion(idx)}
                 >
                   {idx + 1}
                 </button>
@@ -295,72 +326,92 @@ const TakeExam = ({ id }) => {
           </div>
 
           <div className="questions-list">
-            {examData.questions.map((q, idx) => (
-              <div
-                key={q.id}
-                className="question-card"
-                ref={el => questionRefs.current[idx] = el}
-              >
-                <h3>Question {idx + 1}: {q.text} ({q.marks} marks)</h3>
-                {q.question_type === 'MCQ' && (
-                  <div className="choices">
-                    {q.choices.map(choice => (
-                      <label key={choice.id} className="choice">
-                        <input
-                          type="radio"
-                          name={`q${q.id}`}
-                          value={choice.id}
-                          checked={answers[q.id]?.choice_id === choice.id}
-                          onChange={() => handleAnswerChange(q.id, { choice_id: choice.id })}
-                        />
-                        {choice.text}
-                      </label>
-                    ))}
-                  </div>
-                )}
-                {q.question_type === 'TF' && (
-                  <div className="choices">
-                    <label>
+            <div className="question-card">
+              <h3>Question {currentIndex + 1}: {currentQ.text} ({currentQ.marks} marks)</h3>
+              {currentQ.question_type === 'MCQ' && (
+                <div className="choices">
+                  {currentQ.choices.map(choice => (
+                    <label key={choice.id} className="choice">
                       <input
                         type="radio"
-                        name={`q${q.id}`}
-                        value="true"
-                        checked={answers[q.id]?.choice_id === true}
-                        onChange={() => handleAnswerChange(q.id, { choice_id: true })}
-                      /> True
+                        name={`q${currentQ.id}`}
+                        value={choice.id}
+                        checked={answers[currentQ.id]?.choice_id === choice.id}
+                        onChange={() => handleAnswerChange(currentQ.id, { choice_id: choice.id })}
+                      />
+                      {choice.text}
                     </label>
-                    <label>
-                      <input
-                        type="radio"
-                        name={`q${q.id}`}
-                        value="false"
-                        checked={answers[q.id]?.choice_id === false}
-                        onChange={() => handleAnswerChange(q.id, { choice_id: false })}
-                      /> False
-                    </label>
-                  </div>
-                )}
-                {q.question_type === 'ESS' && (
-                  <textarea
-                    rows="4"
-                    value={answers[q.id]?.essay || ''}
-                    onChange={(e) => handleAnswerChange(q.id, { essay: e.target.value })}
-                    placeholder="Write your answer here..."
+                  ))}
+                </div>
+              )}
+              {currentQ.question_type === 'TF' && (
+                <div className="choices">
+                  <label>
+                    <input
+                      type="radio"
+                      name={`q${currentQ.id}`}
+                      value="true"
+                      checked={answers[currentQ.id]?.choice_id === choiceMap[`${currentQ.id}_true`]}
+                      onChange={() => handleAnswerChange(currentQ.id, { choice_id: choiceMap[`${currentQ.id}_true`] })}
+                    /> True
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name={`q${currentQ.id}`}
+                      value="false"
+                      checked={answers[currentQ.id]?.choice_id === choiceMap[`${currentQ.id}_false`]}
+                      onChange={() => handleAnswerChange(currentQ.id, { choice_id: choiceMap[`${currentQ.id}_false`] })}
+                    /> False
+                  </label>
+                </div>
+              )}
+              {currentQ.question_type === 'ESS' && (
+                <textarea
+                  rows="4"
+                  value={answers[currentQ.id]?.essay || ''}
+                  onChange={(e) => handleAnswerChange(currentQ.id, { essay: e.target.value })}
+                  placeholder="Write your answer here..."
+                  disabled={isBlurred}
+                />
+              )}
+              {currentQ.question_type === 'NUM' && (
+                <input
+                  type="number"
+                  step="any"
+                  value={answers[currentQ.id]?.numeric || ''}
+                  onChange={(e) => handleAnswerChange(currentQ.id, { numeric: parseFloat(e.target.value) })}
+                  placeholder="Enter numeric answer"
+                  disabled={isBlurred}
+                />
+              )}
+              <div className="question-navigation">
+                <button
+                  onClick={prevQuestion}
+                  disabled={currentIndex === 0 || isBlurred}
+                  className="nav-btn prev-btn"
+                >
+                  ← Previous
+                </button>
+                {currentIndex === totalQuestions - 1 ? (
+                  <button
+                    onClick={() => handleSubmit(false)}
+                    disabled={submitting || isBlurred}
+                    className="nav-btn submit-btn"
+                  >
+                    {submitting ? 'Submitting...' : 'Submit Exam'}
+                  </button>
+                ) : (
+                  <button
+                    onClick={nextQuestion}
                     disabled={isBlurred}
-                  />
-                )}
-                {q.question_type === 'NUM' && (
-                  <input
-                    type="number"
-                    step="any"
-                    value={answers[q.id]?.numeric || ''}
-                    onChange={(e) => handleAnswerChange(q.id, { numeric: parseFloat(e.target.value) })}
-                    placeholder="Enter numeric answer"
-                    disabled={isBlurred}
-                  />
+                    className="nav-btn next-btn"
+                  >
+                    Next →
+                  </button>
                 )}
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </div>

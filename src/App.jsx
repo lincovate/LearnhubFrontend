@@ -23,6 +23,7 @@ import ChatPage from './pages/pages/ChatPage';
 import ReferencePage from './pages/pages/ReferencePage';
 import ReturnedWorkPage from './pages/pages/ReturnedWorkPage';
 import EssayGrading from './pages/exams/EssayGrading';
+import AnswerSheet from './pages/exams/AnswerSheet';
 
 function App() {
   return (
@@ -68,6 +69,7 @@ function App() {
               } />
               
               {/* Standalone routes (not inside dashboards) */}
+              <Route path="/answer-sheet/:attemptId" element={<AnswerSheet />} />
               <Route path="/chat" element={<PrivateRoute><ChatPage /></PrivateRoute>} />
               <Route path="/reference" element={<PrivateRoute><ReferencePage /></PrivateRoute>} />
               <Route path="/returned-work" element={<PrivateRoute><ReturnedWorkPage /></PrivateRoute>} />
