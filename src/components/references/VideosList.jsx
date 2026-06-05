@@ -200,14 +200,147 @@ const VideosList = ({ isTeacher: propIsTeacher }) => {
   );
 };
 
-// Video Upload Form (JSON) – unchanged
+// ========== Video Upload Form ==========
 const VideoUploadForm = ({ courses, onUpload, onCancel }) => {
-  // same as before
+  const [title, setTitle] = useState('');
+  const [embedUrl, setEmbedUrl] = useState('');
+  const [courseId, setCourseId] = useState('');
+  const [uploading, setUploading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!title || !embedUrl || !courseId) {
+      alert('Please fill all required fields.');
+      return;
+    }
+    const convertedUrl = getYouTubeEmbedUrl(embedUrl);
+    const data = {
+      title,
+      embed_url: convertedUrl,
+      course: parseInt(courseId, 10),
+    };
+    setUploading(true);
+    await onUpload(data);
+    setUploading(false);
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className={styles.VideosList_uploadForm}>
+      <h3 className={styles.VideosList_formTitle}>Add New Video</h3>
+      <input
+        type="text"
+        placeholder="Video Title"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        className={styles.VideosList_input}
+        required
+      />
+      <input
+        type="url"
+        placeholder="YouTube URL (e.g., https://youtu.be/... or https://www.youtube.com/watch?v=...)"
+        value={embedUrl}
+        onChange={(e) => setEmbedUrl(e.target.value)}
+        className={styles.VideosList_input}
+        required
+      />
+      <select
+        value={courseId}
+        onChange={(e) => setCourseId(e.target.value)}
+        className={styles.VideosList_select}
+        required
+      >
+        <option value="">Select Course</option>
+        {courses.map((c) => (
+          <option key={c.id} value={c.id}>
+            {c.code} - {c.name}
+          </option>
+        ))}
+      </select>
+      <div className={styles.VideosList_formActions}>
+        <button
+          type="submit"
+          disabled={uploading}
+          className={styles.VideosList_submitButton}
+        >
+          {uploading ? 'Uploading...' : 'Upload'}
+        </button>
+        <button
+          type="button"
+          onClick={onCancel}
+          className={styles.VideosList_cancelButton}
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+  );
 };
 
-// Edit Modal Component (JSON) – unchanged
+// ========== Edit Modal Component ==========
 const VideoEditModal = ({ video, courses, onUpdate, onClose }) => {
-  // same as before
+  const [title, setTitle] = useState(video.title);
+  const [embedUrl, setEmbedUrl] = useState(video.embed_url);
+  const [courseId, setCourseId] = useState(video.course);
+  const [updating, setUpdating] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const data = {
+      title,
+      embed_url: getYouTubeEmbedUrl(embedUrl),
+      course: parseInt(courseId, 10),
+    };
+    setUpdating(true);
+    await onUpdate(data);
+    setUpdating(false);
+  };
+
+  return (
+    <div className={styles.VideosList_modalOverlay}>
+      <div className={styles.VideosList_modal}>
+        <h3>Edit Video</h3>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className={styles.VideosList_input}
+            required
+          />
+          <input
+            type="url"
+            placeholder="YouTube URL"
+            value={embedUrl}
+            onChange={(e) => setEmbedUrl(e.target.value)}
+            className={styles.VideosList_input}
+            required
+          />
+          <select
+            value={courseId}
+            onChange={(e) => setCourseId(e.target.value)}
+            className={styles.VideosList_select}
+            required
+          >
+            <option value="">Select Course</option>
+            {courses.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.code} - {c.name}
+              </option>
+            ))}
+          </select>
+          <div className={styles.VideosList_formActions}>
+            <button type="submit" disabled={updating}>
+              {updating ? 'Saving...' : 'Save Changes'}
+            </button>
+            <button type="button" onClick={onClose}>
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
 };
 
 export default VideosList;
