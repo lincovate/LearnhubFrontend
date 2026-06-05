@@ -15,7 +15,7 @@ import EditExam from './exams/EditExam';
 import ExamRanking from './exams/ExamRanking';
 import CourseLeaderboard from './exams/CourseLeaderboard';
 import ChatPage from './pages/ChatPage';
-import ReferencePage from './pages/ReferencePage';
+import ReferenceTeacher from './references/ReferenceTeacher';
 import ReturnedWorkPage from './pages/ReturnedWorkPage';
 import './TeacherDashboard.css';
 
@@ -35,9 +35,9 @@ const TeacherDashboard = () => {
         { id: 'announcements', name: 'Announcements', icon: '📢', path: '/teacher/announcements', component: <Announcements /> },
         { id: 'qna', name: 'Q&A', icon: '💬', path: '/teacher/qna', component: <QnA /> },
         { id: 'exams', name: 'Exams', icon: '📝', path: '/teacher/exams', component: <TeacherExams /> },
+        { id: 'reference', name: 'Resources', icon: '📖', path: '/teacher/reference', component: <ReferenceTeacher /> },
         { id: 'analytics', name: 'Analytics', icon: '📊', path: '/teacher/analytics', component: <Analytics /> },
         { id: 'chat', name: 'Messages', icon: '💬', path: '/teacher/chat', component: <ChatPage /> },
-        { id: 'reference', name: 'Resources', icon: '📖', path: '/teacher/reference', component: <ReferencePage /> },
         { id: 'returned-work', name: 'Returned Work', icon: '🔄', path: '/teacher/returned-work', component: <ReturnedWorkPage /> }
     ];
 

@@ -1,0 +1,350 @@
+.NotesList_container {
+  padding: 1rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.NotesList_loading {
+  text-align: center;
+  padding: 3rem;
+  color: #6b7280;
+  font-size: 1.2rem;
+}
+
+.NotesList_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.NotesList_title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+}
+
+.NotesList_headerActions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.NotesList_viewToggle {
+  display: flex;
+  gap: 0.5rem;
+  background: #f3f4f6;
+  padding: 0.25rem;
+  border-radius: 0.5rem;
+}
+
+.NotesList_viewButton {
+  padding: 0.4rem 1rem;
+  border: none;
+  background: transparent;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.NotesList_viewButton:hover {
+  background: #e5e7eb;
+}
+
+.NotesList_activeView {
+  background: white;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  color: #2563eb;
+}
+
+.NotesList_uploadButton {
+  background: #2563eb;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.NotesList_uploadButton:hover {
+  background: #1d4ed8;
+}
+
+/* Grid layout (default) */
+.NotesList_grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .NotesList_grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Tile view (horizontal) */
+.NotesList_tileView {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  grid-template-columns: none;
+}
+
+.NotesList_tileCard {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem;
+  cursor: pointer;
+}
+
+.NotesList_tileCard .NotesList_icon {
+  width: 80px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.NotesList_tileCard .NotesList_fileIcon {
+  font-size: 4rem;
+}
+
+.NotesList_tileCard .NotesList_cardContent {
+  flex: 1;
+}
+
+.NotesList_tileCard .NotesList_actionButtons {
+  justify-content: flex-start;
+  margin-top: 0.5rem;
+}
+
+/* Card base styles */
+.NotesList_card {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  background: white;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.NotesList_card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border-color: #cbd5e1;
+}
+
+.NotesList_icon {
+  text-align: center;
+  margin-bottom: 0.75rem;
+}
+
+.NotesList_fileIcon {
+  font-size: 3rem;
+}
+
+.NotesList_cardTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0.5rem 0 0.25rem;
+  color: #111827;
+}
+
+.NotesList_description {
+  color: #4b5563;
+  font-size: 0.875rem;
+  margin: 0.25rem 0;
+  line-height: 1.4;
+}
+
+.NotesList_cardMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.NotesList_type {
+  font-size: 0.75rem;
+  background: #e0e7ff;
+  color: #3730a3;
+  padding: 0.25rem 0.5rem;
+  border-radius: 1rem;
+  font-weight: 500;
+}
+
+.NotesList_openHint {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.NotesList_actionButtons {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  justify-content: flex-end;
+}
+
+.NotesList_editButton,
+.NotesList_deleteButton {
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.375rem;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background 0.2s;
+}
+
+.NotesList_editButton {
+  background: #f59e0b;
+  color: white;
+}
+
+.NotesList_editButton:hover {
+  background: #d97706;
+}
+
+.NotesList_deleteButton {
+  background: #ef4444;
+  color: white;
+}
+
+.NotesList_deleteButton:hover {
+  background: #dc2626;
+}
+
+/* Upload form styling */
+.NotesList_uploadForm {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.NotesList_formTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.NotesList_input,
+.NotesList_textarea,
+.NotesList_select {
+  width: 100%;
+  padding: 0.6rem;
+  margin-bottom: 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+}
+
+.NotesList_fileInput {
+  margin-bottom: 1rem;
+}
+
+.NotesList_fileInput label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.NotesList_formActions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.NotesList_submitButton,
+.NotesList_cancelButton {
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.375rem;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.NotesList_submitButton {
+  background: #2563eb;
+  color: white;
+}
+
+.NotesList_submitButton:hover {
+  background: #1d4ed8;
+}
+
+.NotesList_cancelButton {
+  background: #9ca3af;
+  color: white;
+}
+
+.NotesList_cancelButton:hover {
+  background: #6b7280;
+}
+
+/* Modal for edit */
+.NotesList_modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.NotesList_modal {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  min-width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+@media (min-width: 640px) {
+  .NotesList_modal {
+    min-width: 450px;
+  }
+}
+
+.NotesList_modal h3 {
+  margin-top: 0;
+  font-size: 1.5rem;
+}
+
+/* Responsive adjustments for tile view on small screens */
+@media (max-width: 640px) {
+  .NotesList_tileCard {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .NotesList_tileCard .NotesList_icon {
+    width: 100%;
+    text-align: center;
+  }
+}

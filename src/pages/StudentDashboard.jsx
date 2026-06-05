@@ -9,6 +9,7 @@ import QnA from '../components/Lesson/QnA';
 import StudentExams from './exams/StudentExams';
 import TakeExam from './exams/TakeExam';
 import ExamResult from './exams/ExamResult';
+import ReferenceStudent from './references/ReferenceStudent';
 import Analytics from '../components/Lesson/Analytics';
 import CourseEnrollment from '../components/Lesson/CourseEnrollment';
 import AttendanceMarking from '../components/Lesson/AttendanceMarking';
@@ -28,6 +29,7 @@ const StudentDashboard = () => {
         { id: 'assignments', name: 'Assignments', icon: '📝', path: '/student/assignments', component: <Assignments /> },
         { id: 'qna', name: 'Q&A', icon: '💬', path: '/student/qna', component: <QnA /> },
         { id: 'exams', name: 'Exams', icon: '📝', path: '/student/exams', component: <StudentExams /> },
+        { id: 'references', name: 'Resources', icon: '📖', path: '/student/references', component: <ReferenceStudent /> },
         { id: 'analytics', name: 'Analytics', icon: '📊', path: '/student/analytics', component: <Analytics /> },
     ];
 
@@ -36,6 +38,7 @@ const StudentDashboard = () => {
         if (currentPath.startsWith('/student/exams')) {
             return 'exams';
         }
+        if (currentPath === '/student/references') return 'references';
         const tab = tabs.find(tab => currentPath === tab.path);
         return tab ? tab.id : 'announcements';
     };

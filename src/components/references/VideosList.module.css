@@ -1,0 +1,326 @@
+.VideosList_container {
+  padding: 1rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.VideosList_loading {
+  text-align: center;
+  padding: 3rem;
+  color: #6b7280;
+  font-size: 1.2rem;
+}
+
+.VideosList_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.VideosList_title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+}
+
+.VideosList_headerActions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.VideosList_viewToggle {
+  display: flex;
+  gap: 0.5rem;
+  background: #f3f4f6;
+  padding: 0.25rem;
+  border-radius: 0.5rem;
+}
+
+.VideosList_viewButton {
+  padding: 0.4rem 1rem;
+  border: none;
+  background: transparent;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.VideosList_viewButton:hover {
+  background: #e5e7eb;
+}
+
+.VideosList_activeView {
+  background: white;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  color: #2563eb;
+}
+
+.VideosList_uploadButton {
+  background: #2563eb;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.VideosList_uploadButton:hover {
+  background: #1d4ed8;
+}
+
+/* Grid layout (default) */
+.VideosList_grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .VideosList_grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Tile view (horizontal) */
+.VideosList_tileView {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  grid-template-columns: none;
+}
+
+.VideosList_tileCard {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem;
+  cursor: pointer;
+}
+
+.VideosList_tileCard .VideosList_thumbnailWrapper {
+  width: 200px;
+  flex-shrink: 0;
+}
+
+.VideosList_tileCard .VideosList_thumbnail {
+  width: 100%;
+  height: auto;
+  margin-bottom: 0;
+}
+
+.VideosList_tileCard .VideosList_cardContent {
+  flex: 1;
+}
+
+.VideosList_tileCard .VideosList_actionButtons {
+  justify-content: flex-start;
+  margin-top: 0.5rem;
+}
+
+/* Card base styles */
+.VideosList_card {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  background: white;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.VideosList_card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border-color: #cbd5e1;
+}
+
+.VideosList_thumbnailWrapper {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.VideosList_thumbnail {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  background: #f3f4f6;
+}
+
+.VideosList_cardTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0.5rem 0;
+  color: #111827;
+}
+
+.VideosList_watchButton {
+  display: inline-block;
+  margin-top: 0.5rem;
+  background: #2563eb;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background 0.2s;
+  width: fit-content;
+}
+
+.VideosList_watchButton:hover {
+  background: #1d4ed8;
+}
+
+.VideosList_actionButtons {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  justify-content: flex-end;
+}
+
+.VideosList_editButton,
+.VideosList_deleteButton {
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.375rem;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background 0.2s;
+}
+
+.VideosList_editButton {
+  background: #f59e0b;
+  color: white;
+}
+
+.VideosList_editButton:hover {
+  background: #d97706;
+}
+
+.VideosList_deleteButton {
+  background: #ef4444;
+  color: white;
+}
+
+.VideosList_deleteButton:hover {
+  background: #dc2626;
+}
+
+/* Upload form styling */
+.VideosList_uploadForm {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.VideosList_formTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.VideosList_input,
+.VideosList_select {
+  width: 100%;
+  padding: 0.6rem;
+  margin-bottom: 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+}
+
+.VideosList_formActions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.VideosList_submitButton,
+.VideosList_cancelButton {
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.375rem;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.VideosList_submitButton {
+  background: #2563eb;
+  color: white;
+}
+
+.VideosList_submitButton:hover {
+  background: #1d4ed8;
+}
+
+.VideosList_cancelButton {
+  background: #9ca3af;
+  color: white;
+}
+
+.VideosList_cancelButton:hover {
+  background: #6b7280;
+}
+
+/* Modal for edit */
+.VideosList_modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.VideosList_modal {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  min-width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+@media (min-width: 640px) {
+  .VideosList_modal {
+    min-width: 450px;
+  }
+}
+
+.VideosList_modal h3 {
+  margin-top: 0;
+  font-size: 1.5rem;
+}
+
+/* Responsive adjustments for tile view on small screens */
+@media (max-width: 640px) {
+  .VideosList_tileCard {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .VideosList_tileCard .VideosList_thumbnailWrapper {
+    width: 100%;
+  }
+}

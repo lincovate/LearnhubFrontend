@@ -20,10 +20,14 @@ import Contact from './pages/Contact';
 import TeacherRegistration from './pages/enter/TeacherRegistration';
 import Profile from './pages/Profile';
 import ChatPage from './pages/pages/ChatPage';
-import ReferencePage from './pages/pages/ReferencePage';
+import BookViewer from './components/references/BookViewer';
 import ReturnedWorkPage from './pages/pages/ReturnedWorkPage';
 import EssayGrading from './pages/exams/EssayGrading';
 import AnswerSheet from './pages/exams/AnswerSheet';
+import NoteViewer from './components/references/NoteViewer';
+import SyllabusViewer from './components/references/SyllabusViewer';
+import VideoViewer from './components/references/VideoViewer';
+
 
 function App() {
   return (
@@ -53,6 +57,11 @@ function App() {
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/teacher-registration" element={<TeacherRegistration />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/books/view/:id" element={<BookViewer />} />
+              <Route path="/notes/view/:id" element={<NoteViewer />} />
+              <Route path="/syllabus/view/:id" element={<SyllabusViewer />} />
+              <Route path="/videos/view/:id" element={<VideoViewer />} />
+
               
               {/* Student Dashboard - Handles all /student/* routes internally */}
               <Route path="/student/*" element={
@@ -71,7 +80,7 @@ function App() {
               {/* Standalone routes (not inside dashboards) */}
               <Route path="/answer-sheet/:attemptId" element={<AnswerSheet />} />
               <Route path="/chat" element={<PrivateRoute><ChatPage /></PrivateRoute>} />
-              <Route path="/reference" element={<PrivateRoute><ReferencePage /></PrivateRoute>} />
+              
               <Route path="/returned-work" element={<PrivateRoute><ReturnedWorkPage /></PrivateRoute>} />
               <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
               <Route path="/student/enrollment" element={<PrivateRoute requiredRole="student"><CourseEnrollment /></PrivateRoute>} />
