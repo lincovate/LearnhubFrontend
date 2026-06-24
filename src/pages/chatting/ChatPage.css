@@ -1,21 +1,56 @@
+/* ===== BASE: DESKTOP FIRST ===== */
 .chatpage-container {
   display: flex;
-  height: 100vh;
+  height: 100%; /* Fill parent container, not forced to 100vh */
   background-color: #f5f7fa;
   font-family: sans-serif;
 }
 
+/* When embedded inside a dashboard, we want it to stretch fully */
 .chatpage-embedded {
   height: 100%;
 }
 
+/* Sidebar */
 .chatpage-sidebar {
   width: 320px;
+  min-width: 280px;
   background: #fff;
   border-right: 1px solid #e0e0e0;
   display: flex;
   flex-direction: column;
   padding: 10px;
+  flex-shrink: 0;
+}
+
+/* Header: Chats heading and settings button on same line with space between */
+.chatpage-desktop-header,
+.chatpage-mobile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px 8px 4px;
+  flex-shrink: 0;
+}
+
+.chatpage-desktop-header h2,
+.chatpage-mobile-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.chatpage-settings-btn {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  padding: 4px 8px;
+  color: inherit;
+  transition: transform 0.2s;
+}
+.chatpage-settings-btn:hover {
+  transform: rotate(60deg);
 }
 
 .chatpage-new-chat-btn {
@@ -28,6 +63,7 @@
   cursor: pointer;
   margin-bottom: 10px;
   transition: background 0.2s;
+  flex-shrink: 0;
 }
 .chatpage-new-chat-btn:hover {
   background: #357abd;
@@ -38,6 +74,7 @@
   display: flex;
   flex-direction: column;
   background: #fff;
+  min-width: 0; /* prevent overflow */
 }
 
 .chatpage-placeholder {
@@ -47,4 +84,90 @@
   height: 100%;
   color: #888;
   font-size: 18px;
+  padding: 20px;
+  text-align: center;
+}
+
+/* ===== TABLET (≤ 1024px) ===== */
+@media (max-width: 1024px) {
+  .chatpage-sidebar {
+    width: 260px;
+    min-width: 220px;
+    padding: 8px;
+  }
+  .chatpage-new-chat-btn {
+    font-size: 14px;
+    padding: 8px 14px;
+  }
+  .chatpage-placeholder {
+    font-size: 16px;
+  }
+  .chatpage-desktop-header h2,
+  .chatpage-mobile-header h2 {
+    font-size: 18px;
+  }
+}
+
+/* ===== MOBILE (≤ 768px) ===== */
+@media (max-width: 768px) {
+  .chatpage-container {
+    flex-direction: column;
+    height: 100%; /* Fill parent */
+    overflow: hidden;
+  }
+
+  .chatpage-sidebar {
+    width: 100%;
+    min-width: unset;
+    max-height: 40vh;
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 8px;
+    flex-shrink: 0;
+  }
+
+  .chatpage-mobile-header {
+    padding: 0 0 6px 0;
+  }
+  .chatpage-mobile-header h2 {
+    font-size: 18px;
+  }
+
+  .chatpage-new-chat-btn {
+    font-size: 14px;
+    padding: 8px 12px;
+    margin-bottom: 6px;
+  }
+
+  .chatpage-main {
+    flex: 1;
+    min-height: 0; /* prevent flex overflow */
+  }
+
+  .chatpage-placeholder {
+    font-size: 14px;
+    padding: 16px;
+  }
+}
+
+/* ===== VERY SMALL MOBILE (≤ 480px) ===== */
+@media (max-width: 480px) {
+  .chatpage-sidebar {
+    max-height: 35vh;
+    padding: 6px;
+  }
+  .chatpage-new-chat-btn {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+  .chatpage-placeholder {
+    font-size: 13px;
+  }
+  .chatpage-mobile-header h2 {
+    font-size: 16px;
+  }
+  .chatpage-settings-btn {
+    font-size: 18px;
+    padding: 2px 6px;
+  }
 }

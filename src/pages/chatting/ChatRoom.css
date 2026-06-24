@@ -1,8 +1,10 @@
+/* ===== BASE: DESKTOP FIRST ===== */
 .chatroom-container {
   display: flex;
   flex-direction: column;
   height: 100%;
   background: #fff;
+  position: relative;
 }
 
 .chatroom-header {
@@ -13,10 +15,14 @@
   gap: 12px;
   background: #fafafa;
   flex-wrap: wrap;
+  flex-shrink: 0;
+  z-index: 10;
 }
 .chatroom-header h3 {
   margin: 0;
   font-size: 18px;
+  flex: 1;
+  min-width: 120px;
 }
 .chatroom-badge {
   background: #4a90e2;
@@ -24,8 +30,8 @@
   font-size: 12px;
   padding: 2px 10px;
   border-radius: 12px;
+  white-space: nowrap;
 }
-
 .chatroom-toggle {
   margin-left: auto;
   display: flex;
@@ -38,11 +44,33 @@
   align-items: center;
   gap: 6px;
   cursor: pointer;
+  white-space: nowrap;
 }
 .chatroom-toggle input[type="checkbox"] {
   width: 16px;
   height: 16px;
   cursor: pointer;
+}
+
+.chatroom-back-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0 4px;
+  color: #4a90e2;
+}
+.chatroom-back-btn:hover {
+  opacity: 0.7;
+}
+
+/* Messages wrapper – makes scroll area fill remaining space */
+.chatroom-messages-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
 }
 
 .chatroom-messages {
@@ -60,10 +88,39 @@
   padding: 20px;
 }
 
+/* Scroll-to-bottom button (maroon) */
+.chatroom-scroll-btn {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background: #800000; /* maroon */
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 22px;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+.chatroom-scroll-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Input form – sticky at bottom */
 .chatroom-input-form {
   border-top: 1px solid #e0e0e0;
   padding: 12px 20px;
   background: #fafafa;
+  flex-shrink: 0;
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
 }
 
 .chatroom-input-wrapper {
@@ -79,6 +136,7 @@
   border-radius: 24px;
   font-size: 15px;
   outline: none;
+  min-width: 0;
 }
 .chatroom-input:focus {
   border-color: #4a90e2;
@@ -95,6 +153,7 @@
   font-size: 14px;
   color: #555;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .chatroom-send-btn {
@@ -106,6 +165,7 @@
   font-size: 15px;
   cursor: pointer;
   transition: background 0.2s;
+  white-space: nowrap;
 }
 .chatroom-send-btn:hover:not(:disabled) {
   background: #357abd;
@@ -121,8 +181,138 @@
   color: #999;
   border-top: 1px solid #e0e0e0;
   background: #fafafa;
+  flex-shrink: 0;
 }
 .chatroom-message-disabled p {
   margin: 0;
   font-size: 14px;
+}
+
+/* ===== TABLET (≤ 1024px) ===== */
+@media (max-width: 1024px) {
+  .chatroom-header {
+    padding: 12px 16px;
+    gap: 8px;
+  }
+  .chatroom-header h3 {
+    font-size: 16px;
+  }
+  .chatroom-messages {
+    padding: 12px 16px;
+  }
+  .chatroom-input-form {
+    padding: 10px 16px;
+  }
+  .chatroom-input {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+  .chatroom-send-btn {
+    font-size: 14px;
+    padding: 6px 16px;
+  }
+  .chatroom-viewonce-label {
+    font-size: 13px;
+  }
+  .chatroom-toggle label {
+    font-size: 13px;
+  }
+  .chatroom-scroll-btn {
+    bottom: 16px;
+    right: 16px;
+    width: 38px;
+    height: 38px;
+    font-size: 20px;
+  }
+}
+
+/* ===== MOBILE (≤ 768px) ===== */
+@media (max-width: 768px) {
+  .chatroom-header {
+    padding: 10px 12px;
+    gap: 6px;
+  }
+  .chatroom-header h3 {
+    font-size: 15px;
+    min-width: 80px;
+  }
+  .chatroom-badge {
+    font-size: 11px;
+    padding: 1px 8px;
+  }
+  .chatroom-toggle label {
+    font-size: 12px;
+    gap: 4px;
+  }
+  .chatroom-toggle input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+  }
+  .chatroom-messages {
+    padding: 10px 12px;
+    gap: 6px;
+  }
+  .chatroom-input-form {
+    padding: 8px 12px;
+  }
+  .chatroom-input-wrapper {
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .chatroom-input {
+    flex: 1 1 100%;
+    font-size: 14px;
+    padding: 8px 12px;
+    border-radius: 20px;
+  }
+  .chatroom-viewonce-label {
+    font-size: 12px;
+    order: 2;
+  }
+  .chatroom-send-btn {
+    font-size: 13px;
+    padding: 6px 14px;
+    order: 3;
+  }
+  .chatroom-message-disabled p {
+    font-size: 13px;
+  }
+  .chatroom-scroll-btn {
+    bottom: 80px; /* above the input bar */
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+}
+
+/* ===== VERY SMALL MOBILE (≤ 480px) ===== */
+@media (max-width: 480px) {
+  .chatroom-header h3 {
+    font-size: 14px;
+  }
+  .chatroom-toggle label {
+    font-size: 11px;
+  }
+  .chatroom-messages {
+    padding: 8px 10px;
+  }
+  .chatroom-input {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+  .chatroom-send-btn {
+    font-size: 12px;
+    padding: 5px 12px;
+  }
+  .chatroom-viewonce-label {
+    font-size: 11px;
+  }
+  .chatroom-scroll-btn {
+    bottom: 72px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
 }

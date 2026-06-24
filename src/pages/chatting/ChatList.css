@@ -1,9 +1,11 @@
+/* ===== BASE ===== */
 .chatlist-container {
   flex: 1;
   overflow-y: auto;
 }
 
-.chatlist-loading, .chatlist-empty {
+.chatlist-loading,
+.chatlist-empty {
   padding: 20px;
   text-align: center;
   color: #888;
@@ -41,10 +43,14 @@
 .chatlist-info {
   flex: 1;
   overflow: hidden;
+  min-width: 0;
 }
 .chatlist-name {
   font-weight: 600;
   font-size: 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .chatlist-last-msg {
   font-size: 14px;
@@ -52,4 +58,81 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* ... existing ... */
+.chatlist-unread-badge {
+  background: #4a90e2;
+  color: #fff;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 12px;
+  min-width: 20px;
+  text-align: center;
+  margin-left: 6px;
+  flex-shrink: 0;
+  animation: pulse-badge 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-badge {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* ===== TABLET ===== */
+@media (max-width: 1024px) {
+  .chatlist-item {
+    padding: 10px 8px;
+  }
+  .chatlist-avatar {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+    margin-right: 10px;
+  }
+  .chatlist-name {
+    font-size: 15px;
+  }
+  .chatlist-last-msg {
+    font-size: 13px;
+  }
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 768px) {
+  .chatlist-item {
+    padding: 8px 6px;
+  }
+  .chatlist-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+    margin-right: 8px;
+  }
+  .chatlist-name {
+    font-size: 14px;
+  }
+  .chatlist-last-msg {
+    font-size: 12px;
+  }
+}
+
+/* ===== VERY SMALL MOBILE ===== */
+@media (max-width: 480px) {
+  .chatlist-item {
+    padding: 6px 4px;
+  }
+  .chatlist-avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+    margin-right: 6px;
+  }
+  .chatlist-name {
+    font-size: 13px;
+  }
+  .chatlist-last-msg {
+    font-size: 11px;
+  }
 }

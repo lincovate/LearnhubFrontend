@@ -27,6 +27,7 @@ import AnswerSheet from './pages/exams/AnswerSheet';
 import NoteViewer from './components/references/NoteViewer';
 import SyllabusViewer from './components/references/SyllabusViewer';
 import VideoViewer from './components/references/VideoViewer';
+import { ChatThemeProvider } from './contexts/ThemeContext';
 
 
 function App() {
@@ -63,23 +64,27 @@ function App() {
               <Route path="/videos/view/:id" element={<VideoViewer />} />
 
               
-              {/* Student Dashboard - Handles all /student/* routes internally */}
+           {/* Student Dashboard - wrap with ChatThemeProvider */}
               <Route path="/student/*" element={
                 <PrivateRoute requiredRole="student">
-                  <StudentDashboard />
+                  <ChatThemeProvider>
+                    <StudentDashboard />
+                  </ChatThemeProvider>
                 </PrivateRoute>
               } />
               
-              {/* Teacher Dashboard - Handles all /teacher/* routes internally */}
+              {/* Teacher Dashboard - wrap with ChatThemeProvider */}
               <Route path="/teacher/*" element={
                 <PrivateRoute requiredRole="teacher">
-                  <TeacherDashboard />
+                  <ChatThemeProvider>
+                    <TeacherDashboard />
+                  </ChatThemeProvider>
                 </PrivateRoute>
               } />
               
               {/* Standalone routes (not inside dashboards) */}
               <Route path="/answer-sheet/:attemptId" element={<AnswerSheet />} />
-              <Route path="/chat" element={<PrivateRoute><ChatPage /></PrivateRoute>} />
+              <Route path="/chat" element={<PrivateRoute> <ChatThemeProvider> <ChatPage /></ChatThemeProvider></PrivateRoute>} />
               
               <Route path="/returned-work" element={<PrivateRoute><ReturnedWorkPage /></PrivateRoute>} />
               <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />

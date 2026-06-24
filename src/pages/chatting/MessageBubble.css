@@ -1,3 +1,4 @@
+/* ===== BASE ===== */
 .messagebubble-container {
   max-width: 70%;
   padding: 8px 14px;
@@ -23,10 +24,12 @@
   gap: 8px;
   align-items: baseline;
   margin-bottom: 4px;
+  flex-wrap: wrap;
 }
 .messagebubble-timestamp {
   color: #777;
   font-size: 11px;
+  white-space: nowrap;
 }
 .messagebubble-edited {
   color: #999;
@@ -38,6 +41,7 @@
   margin: 0;
   font-size: 15px;
   line-height: 1.4;
+  word-break: break-word;
 }
 
 .messagebubble-deleted {
@@ -118,4 +122,83 @@
 .messagebubble-cancel-btn {
   background: #ddd;
   color: #333;
+}
+
+/* ===== TABLET ===== */
+@media (max-width: 1024px) {
+  .messagebubble-container {
+    max-width: 75%;
+    padding: 6px 12px;
+  }
+  .messagebubble-content {
+    font-size: 14px;
+  }
+  .messagebubble-header {
+    font-size: 12px;
+  }
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 768px) {
+  .messagebubble-container {
+    max-width: 85%;
+    padding: 6px 10px;
+    border-radius: 14px;
+  }
+  .messagebubble-content {
+    font-size: 14px;
+  }
+  .messagebubble-header {
+    font-size: 12px;
+    gap: 4px;
+  }
+  .messagebubble-timestamp {
+    font-size: 10px;
+  }
+  .messagebubble-edit-btn,
+  .messagebubble-delete-btn,
+  .messagebubble-viewonce-btn {
+    font-size: 11px;
+    padding: 1px 4px;
+  }
+  .messagebubble-edit-textarea {
+    font-size: 13px;
+    min-height: 50px;
+  }
+  .messagebubble-save-btn,
+  .messagebubble-cancel-btn {
+    font-size: 12px;
+    padding: 3px 10px;
+  }
+  .messagebubble-viewonce-badge {
+    font-size: 11px;
+  }
+}
+
+/* ===== VERY SMALL MOBILE ===== */
+@media (max-width: 480px) {
+  .messagebubble-container {
+    max-width: 90%;
+    padding: 4px 8px;
+    border-radius: 12px;
+  }
+  .messagebubble-content {
+    font-size: 13px;
+  }
+  .messagebubble-header {
+    font-size: 11px;
+    flex-wrap: wrap;
+  }
+  .messagebubble-timestamp {
+    font-size: 9px;
+  }
+  .messagebubble-actions {
+    gap: 4px;
+  }
+  .messagebubble-edit-btn,
+  .messagebubble-delete-btn,
+  .messagebubble-viewonce-btn {
+    font-size: 10px;
+    padding: 1px 3px;
+  }
 }

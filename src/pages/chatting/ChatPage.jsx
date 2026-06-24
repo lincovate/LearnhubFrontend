@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import { useChatTheme } from '../../contexts/ThemeContext';
 import { chatApi } from '../../api/chatApi';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
 import toast from 'react-hot-toast';
 import ChatList from './ChatList';
 import ChatRoom from './ChatRoom';
 import ContactsModal from './ContactsModal';
+import ThemeSettingsModal from './ThemeSettingsModal'; // New modal
 import './ChatPage.css';
 
 const getErrorMessage = (error, defaultMsg) => {
@@ -13,14 +16,18 @@ const getErrorMessage = (error, defaultMsg) => {
 
 const ChatPage = ({ embedded = false }) => {
   const { user } = useAuth();
+  const { theme, currentTheme, toggleTheme } = useChatTheme();
+  const isMobile = useMediaQuery('(max-width: 768px)');
   const [rooms, setRooms] = useState([]);
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [messages, setMessages] = useState([]);
   const [loadingRooms, setLoadingRooms] = useState(true);
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [showContacts, setShowContacts] = useState(false);
+  const [showThemeSettings, setShowThemeSettings] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
+  const [showList, setShowList] = useState(true);
 
   // Fetch rooms
   const fetchRooms = useCallback(async () => {
@@ -64,10 +71,11 @@ const ChatPage = ({ embedded = false }) => {
     if (selectedRoom) {
       setMessages([]);
       fetchMessages(selectedRoom.id, 1);
+      if (isMobile) setShowList(false);
     }
-  }, [selectedRoom, fetchMessages]);
+  }, [selectedRoom, fetchMessages, isMobile]);
 
-  // Poll for new messages every 5 seconds
+  // Poll for new messages
   useEffect(() => {
     if (!selectedRoom) return;
     const interval = setInterval(() => {
@@ -148,7 +156,6 @@ const ChatPage = ({ embedded = false }) => {
     }
   };
 
-  // Handle toggle for student chat permission
   const handleToggleStudentChat = async (roomId, value) => {
     try {
       const res = await chatApi.updateRoom(roomId, { students_can_chat: value });
@@ -162,16 +169,80 @@ const ChatPage = ({ embedded = false }) => {
     }
   };
 
+  const handleBackToList = () => {
+    setShowList(true);
+    setSelectedRoom(null);
+  };
+
   // ---- Render ----
   if (!user) return <div className="chatpage-container">Please log in</div>;
 
+  // Mobile layout
+  if (isMobile) {
+    return (
+      <div className="chatpage-container chatpage-mobile" style={{ background: currentTheme.background, color: currentTheme.text }}>
+        {showList ? (
+          <>
+            <div className="chatpage-sidebar" style={{ background: currentTheme.background, borderColor: currentTheme.border }}>
+              <div className="chatpage-mobile-header">
+                <h2>Chats</h2>
+                <button onClick={() => setShowThemeSettings(true)} className="chatpage-settings-btn">
+                  ⚙️
+                </button>
+              </div>
+              <button className="chatpage-new-chat-btn" onClick={() => setShowContacts(true)}>
+                + New Chat
+              </button>
+              <ChatList
+                rooms={rooms}
+                selectedRoom={selectedRoom}
+                onSelectRoom={setSelectedRoom}
+                loading={loadingRooms}
+                theme={currentTheme}
+              />
+            </div>
+            {showContacts && (
+              <ContactsModal onClose={() => setShowContacts(false)} onStartChat={(id) => {
+                handleStartChat(id);
+                setShowContacts(false);
+              }} />
+            )}
+          </>
+        ) : (
+          <div className="chatpage-main" style={{ background: currentTheme.background }}>
+            <ChatRoom
+              room={selectedRoom}
+              messages={messages}
+              currentUser={user}
+              onSendMessage={handleSendMessage}
+              onEditMessage={handleEditMessage}
+              onDeleteMessage={handleDeleteMessage}
+              onViewOnceMessage={handleViewOnce}
+              onToggleStudentChat={handleToggleStudentChat}
+              onBack={handleBackToList}
+              loading={loadingMessages}
+              onLoadMore={() => {
+                if (hasMore) fetchMessages(selectedRoom.id, page + 1);
+              }}
+              theme={currentTheme}
+            />
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Desktop layout
   return (
-    <div className={`chatpage-container ${embedded ? 'chatpage-embedded' : ''}`}>
-      <div className="chatpage-sidebar">
-        <button
-          className="chatpage-new-chat-btn"
-          onClick={() => setShowContacts(true)}
-        >
+    <div className={`chatpage-container ${embedded ? 'chatpage-embedded' : ''}`} style={{ background: currentTheme.background, color: currentTheme.text }}>
+      <div className="chatpage-sidebar" style={{ background: currentTheme.background, borderColor: currentTheme.border }}>
+        <div className="chatpage-desktop-header">
+          <h2>Chats</h2>
+          <button onClick={() => setShowThemeSettings(true)} className="chatpage-settings-btn">
+            ⚙️
+          </button>
+        </div>
+        <button className="chatpage-new-chat-btn" onClick={() => setShowContacts(true)}>
           + New Chat
         </button>
         <ChatList
@@ -179,9 +250,10 @@ const ChatPage = ({ embedded = false }) => {
           selectedRoom={selectedRoom}
           onSelectRoom={setSelectedRoom}
           loading={loadingRooms}
+          theme={currentTheme}
         />
       </div>
-      <div className="chatpage-main">
+      <div className="chatpage-main" style={{ background: currentTheme.background }}>
         {selectedRoom ? (
           <ChatRoom
             room={selectedRoom}
@@ -192,23 +264,29 @@ const ChatPage = ({ embedded = false }) => {
             onDeleteMessage={handleDeleteMessage}
             onViewOnceMessage={handleViewOnce}
             onToggleStudentChat={handleToggleStudentChat}
+            onBack={handleBackToList}
             loading={loadingMessages}
             onLoadMore={() => {
               if (hasMore) fetchMessages(selectedRoom.id, page + 1);
             }}
+            theme={currentTheme}
           />
         ) : (
-          <div className="chatpage-placeholder">
+          <div className="chatpage-placeholder" style={{ color: currentTheme.text }}>
             <p>Select a chat or start a new one</p>
           </div>
         )}
       </div>
 
       {showContacts && (
-        <ContactsModal
-          onClose={() => setShowContacts(false)}
-          onStartChat={handleStartChat}
-        />
+        <ContactsModal onClose={() => setShowContacts(false)} onStartChat={(id) => {
+          handleStartChat(id);
+          setShowContacts(false);
+        }} />
+      )}
+      
+      {showThemeSettings && (
+        <ThemeSettingsModal onClose={() => setShowThemeSettings(false)} />
       )}
     </div>
   );
