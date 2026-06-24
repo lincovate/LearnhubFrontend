@@ -19,7 +19,7 @@ import Pricing from './pages/Pricing';
 import Contact from './pages/Contact';
 import TeacherRegistration from './pages/enter/TeacherRegistration';
 import Profile from './pages/Profile';
-import ChatPage from './pages/pages/ChatPage';
+import ChatPage from './pages/chatting/ChatPage';
 import BookViewer from './components/references/BookViewer';
 import ReturnedWorkPage from './pages/pages/ReturnedWorkPage';
 import EssayGrading from './pages/exams/EssayGrading';

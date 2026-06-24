@@ -14,7 +14,7 @@ import CreateExam from './exams/CreateExam';
 import EditExam from './exams/EditExam';
 import ExamRanking from './exams/ExamRanking';
 import CourseLeaderboard from './exams/CourseLeaderboard';
-import ChatPage from './pages/ChatPage';
+import ChatPage from './chatting/ChatPage';
 import ReferenceTeacher from './references/ReferenceTeacher';
 import ReturnedWorkPage from './pages/ReturnedWorkPage';
 import './TeacherDashboard.css';
@@ -37,7 +37,7 @@ const TeacherDashboard = () => {
         { id: 'exams', name: 'Exams', icon: '📝', path: '/teacher/exams', component: <TeacherExams /> },
         { id: 'reference', name: 'Resources', icon: '📖', path: '/teacher/reference', component: <ReferenceTeacher /> },
         { id: 'analytics', name: 'Analytics', icon: '📊', path: '/teacher/analytics', component: <Analytics /> },
-        { id: 'chat', name: 'Messages', icon: '💬', path: '/teacher/chat', component: <ChatPage /> },
+        { id: 'chat', name: 'Chat', icon: '💬', path: '/teacher/chat', component: <ChatPage embedded /> },
         { id: 'returned-work', name: 'Returned Work', icon: '🔄', path: '/teacher/returned-work', component: <ReturnedWorkPage /> }
     ];
 
@@ -46,6 +46,7 @@ const TeacherDashboard = () => {
         if (currentPath.startsWith('/teacher/exams')) {
             return 'exams';
         }
+        if (currentPath === '/teacher/chat') return 'chat';
         if (currentPath.startsWith('/teacher/grading/')) {
             return 'grading';
         }

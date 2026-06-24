@@ -1,0 +1,121 @@
+.messagebubble-container {
+  max-width: 70%;
+  padding: 8px 14px;
+  border-radius: 16px;
+  word-wrap: break-word;
+  margin-bottom: 4px;
+  position: relative;
+}
+
+.messagebubble-own {
+  align-self: flex-end;
+  background: #d9f0ff;
+}
+
+.messagebubble-other {
+  align-self: flex-start;
+  background: #f1f3f5;
+}
+
+.messagebubble-header {
+  font-size: 13px;
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  margin-bottom: 4px;
+}
+.messagebubble-timestamp {
+  color: #777;
+  font-size: 11px;
+}
+.messagebubble-edited {
+  color: #999;
+  font-size: 11px;
+  font-style: italic;
+}
+
+.messagebubble-content {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.messagebubble-deleted {
+  color: #999;
+  font-style: italic;
+}
+
+.messagebubble-viewonce-badge {
+  font-size: 12px;
+  color: #e67e22;
+  background: #fdf0e0;
+  padding: 2px 8px;
+  border-radius: 12px;
+  display: inline-block;
+  margin-top: 4px;
+}
+
+.messagebubble-actions {
+  margin-top: 6px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.messagebubble-edit-btn,
+.messagebubble-delete-btn,
+.messagebubble-viewonce-btn {
+  background: none;
+  border: none;
+  color: #4a90e2;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.messagebubble-edit-btn:hover,
+.messagebubble-delete-btn:hover,
+.messagebubble-viewonce-btn:hover {
+  background: rgba(74, 144, 226, 0.1);
+}
+
+.messagebubble-delete-btn {
+  color: #e74c3c;
+}
+.messagebubble-delete-btn:hover {
+  background: rgba(231, 76, 60, 0.1);
+}
+
+.messagebubble-edit-area {
+  width: 100%;
+}
+.messagebubble-edit-textarea {
+  width: 100%;
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  resize: vertical;
+  min-height: 60px;
+}
+.messagebubble-edit-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+.messagebubble-save-btn,
+.messagebubble-cancel-btn {
+  padding: 4px 12px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 13px;
+}
+.messagebubble-save-btn {
+  background: #4a90e2;
+  color: #fff;
+}
+.messagebubble-cancel-btn {
+  background: #ddd;
+  color: #333;
+}

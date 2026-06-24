@@ -1,0 +1,50 @@
+.chatpage-container {
+  display: flex;
+  height: 100vh;
+  background-color: #f5f7fa;
+  font-family: sans-serif;
+}
+
+.chatpage-embedded {
+  height: 100%;
+}
+
+.chatpage-sidebar {
+  width: 320px;
+  background: #fff;
+  border-right: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.chatpage-new-chat-btn {
+  padding: 10px;
+  background: #4a90e2;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: background 0.2s;
+}
+.chatpage-new-chat-btn:hover {
+  background: #357abd;
+}
+
+.chatpage-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+}
+
+.chatpage-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #888;
+  font-size: 18px;
+}
